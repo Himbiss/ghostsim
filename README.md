@@ -2,10 +2,10 @@ ghostsim
 ========
 
 This is a programming simulator.
-It provides a Editor in which the user can write a java program that controls Boo,
-the ghost from Super Mario. Boo can be guided through a territory with obstacles and Items.
+It provides an editor in which the user can write a java program that controls Boo,
+the ghost from Super Mario. Boo can be guided through a territory with obstacles and items.
 The user can modify the territory and save it for future use. The aim of this program is to 
-give students who don't know any knowledge in programming
+give students who don't have any knowledge in programming
 the possibility to learn the basic concepts of programming.
 This program was built during the course "Fortgeschrittene Java-Technologien" in 2014 and is heavily 
 based on the Hamster Simulator by Dr.-Ing. Dietrich Boles (http://www.java-hamster-modell.de/simulator.html)
