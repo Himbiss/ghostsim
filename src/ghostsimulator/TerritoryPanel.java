@@ -254,7 +254,7 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 
 				int fireballCounter = tile.numFireballs();
 
-				for (int row = 0; row < fireballRows; row++) {
+				for (int row = fireballRows-1; row >= 0; row--) {
 					for (int f = 0; f < objectsPerRow; f++) {
 						int fX = startX + f * objectWidth;
 						int fY = startY + row * objectHeight;
