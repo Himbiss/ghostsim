@@ -272,10 +272,13 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 		// draw debug information
 		if (GhostSimulator.DEBUG_MODE) {
 			g2d.setColor(Color.RED);
-			g2d.drawString(
-					"(" + tile.getColumnIndex() + "|" + tile.getRowIndex()
-							+ ")", startX + (TILE_SIZE / 3), startY
-							+ (TILE_SIZE / 2));
+			String str = "(" + tile.getColumnIndex() + "|" + tile.getRowIndex()+ ")";
+			int posX = startX + (TILE_SIZE / 2);
+			int posY = startY + (TILE_SIZE / 2);
+			FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
+			posX -= metrics.stringWidth(str)/2;
+			posY += metrics.getHeight()/2;
+			g2d.drawString(str, posX, posY);
 		}
 	}
 
