@@ -12,7 +12,7 @@ based on the Hamster Simulator by Dr.-Ing. Dietrich Boles (http://www.java-hamst
 
 Keymap for the Debug Mode:
 
-D - toggle the Debug Mode
+d - toggle the Debug Mode
 
 t - Take a fireball from the current tile
 
