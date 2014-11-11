@@ -1,5 +1,6 @@
 package ghostsimulator.view;
 
+import ghostsimulator.GhostManager;
 import ghostsimulator.GhostSimulator;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.NoSpaceOnTileException;
@@ -30,12 +31,12 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 
 	public static int TILE_SIZE = 51;
 
-	private Territory territory;
 	private Tile[][] tiles;
 	private int columnCount;
 	private int rowCount;
 	private int offsetX, offsetY = TILE_SIZE;
 	private Font statusFont;
+	private GhostManager manager;
 
 	private Image boohooNorthImage;
 	private Image boohooEastImage;
@@ -48,12 +49,12 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 	private Image fireballAnimatedImage;
 	
 
-	public TerritoryPanel(Territory territory) {
+	public TerritoryPanel(GhostManager manager) {
+		this.manager = manager;
 		addMouseListener(this);
-		this.territory = territory;
-		tiles = territory.getTerritory();
-		columnCount = territory.getColumnCount();
-		rowCount = territory.getRowCount();
+		tiles = manager.getTerritory().getTerritory();
+		columnCount = manager.getTerritory().getColumnCount();
+		rowCount = manager.getTerritory().getRowCount();
 		statusFont = new Font("Arial", Font.BOLD, 12);
 		loadImages();
 		addKeyListener(this);
@@ -110,11 +111,11 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 			drawBackground(g2d);
 			
 			// draw boohoo
-			int startX = offsetX + territory.getBoohooPosition().x * TILE_SIZE;
-			int startY = offsetY + territory.getBoohooPosition().y * TILE_SIZE;
+			int startX = offsetX + manager.getTerritory().getBoohooPosition().x * TILE_SIZE;
+			int startY = offsetY + manager.getTerritory().getBoohooPosition().y * TILE_SIZE;
 			
 			Image boohooImg = boohooEastImage;
-			switch (territory.getBoohooDirection()) {
+			switch (manager.getTerritory().getBoohooDirection()) {
 			case NORTH:
 				boohooImg = boohooNorthImage;
 				break;
@@ -141,9 +142,9 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 			// draw debug information like the front tile of the boohoo
 			if (GhostSimulator.DEBUG_MODE) {
 				Point frontPosition = Territory.advancePosition(
-						territory.getBoohooPosition(),
-						territory.getBoohooDirection());
-				Tile frontTile = territory.getTerritory()[frontPosition.x][frontPosition.y];
+						manager.getTerritory().getBoohooPosition(),
+						manager.getTerritory().getBoohooDirection());
+				Tile frontTile = manager.getTerritory().getTerritory()[frontPosition.x][frontPosition.y];
 				int startXTile = offsetX + frontTile.getColumnIndex()
 						* TILE_SIZE;
 				int startYTile = offsetY + frontTile.getRowIndex() * TILE_SIZE;
@@ -192,7 +193,7 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 		int stringWidth = metrics.stringWidth(str);
 		int fireballWidth = fireballImage.getWidth(this);
 		g2d.drawString("Fireballs:", startX, startY);
-		for(int x=startX+stringWidth; x<territory.getBoohooNumFireballs()*fireballWidth+startX+stringWidth; x+=fireballWidth) {
+		for(int x=startX+stringWidth; x<manager.getTerritory().getBoohooNumFireballs()*fireballWidth+startX+stringWidth; x+=fireballWidth) {
 			g2d.drawImage(fireballImage, x, startY-metrics.getHeight(), this);
 		}
 	}
@@ -340,7 +341,7 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 	public void keyReleased(KeyEvent e) {
 		int keyCode = e.getKeyCode();
 		try {
-			BooHoo boohoo = territory.getBoohoo();
+			BooHoo boohoo = manager.getTerritory().getBoohoo();
 			switch (keyCode) {
 			case KeyEvent.VK_T:
 				boohoo.takeFireball();

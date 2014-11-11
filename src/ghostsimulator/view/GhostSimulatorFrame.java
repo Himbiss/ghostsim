@@ -1,5 +1,6 @@
 package ghostsimulator.view;
 
+import ghostsimulator.GhostManager;
 import ghostsimulator.model.Territory;
 
 import java.awt.BorderLayout;
@@ -21,13 +22,9 @@ import javax.swing.JSplitPane;
  */
 public class GhostSimulatorFrame extends JFrame {
 
-	private MenuBar menuBar;
-	private ToolBar toolBar;
-	private Editor editor;
-	private Territory territory;
 	private JLabel infoLabel;
 
-	public GhostSimulatorFrame(Editor editor, Territory territory) {
+	public GhostSimulatorFrame(GhostManager manager) {
 		// setup frame
 		setSize(900, 700);
 		setLayout(new BorderLayout()); 
@@ -35,21 +32,22 @@ public class GhostSimulatorFrame extends JFrame {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setVisible(true);
 		
-		this.editor = editor;
-		this.territory = territory;
+		Editor editor = new Editor(manager);
 		
 		// add menu bar
-		menuBar = new MenuBar();
+		MenuBar menuBar = new MenuBar(manager);
 		setJMenuBar(menuBar);
 		
 		// add toolbar
-		toolBar = new ToolBar();
+		ToolBar toolBar = new ToolBar(manager);
 		add(toolBar, BorderLayout.NORTH);
+		
+		// create the territory panel
+		TerritoryPanel territoryPanel = new TerritoryPanel(manager);
 		
 		// create split pane and add editor and territory in scroll panes
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		JScrollPane editorScrollPane = new JScrollPane(editor);
-		TerritoryPanel territoryPanel = new TerritoryPanel(territory);
 		JScrollPane territoryScrollPane = new JScrollPane(territoryPanel);
 		splitPane.add(editorScrollPane);
 		splitPane.add(territoryScrollPane);
@@ -60,6 +58,13 @@ public class GhostSimulatorFrame extends JFrame {
 		infoLabel = new JLabel("Welcome!");
 		infoPanel.add(infoLabel);
 		add(infoPanel, BorderLayout.SOUTH);
+		
+		// add view widgets to the manager
+		manager.setEditor(editor);
+		manager.setMenubar(menuBar);
+		manager.setToolbar(toolBar);
+		manager.setInfoLabel(infoLabel);
+		manager.setTerritoryPanel(territoryPanel);
 	}
 	
 	/**

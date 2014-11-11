@@ -1,5 +1,6 @@
 package ghostsimulator.view;
 
+import ghostsimulator.GhostManager;
 import ghostsimulator.controller.AutocompleteAction;
 
 import java.awt.Dimension;
@@ -21,7 +22,10 @@ import javax.swing.KeyStroke;
  */
 public class Editor extends JEditorPane {
 	
-	public Editor() {
+	private GhostManager manager;
+	
+	public Editor(GhostManager manager) {
+		this.manager = manager;
 		setPreferredSize(new Dimension(300, 0));
 		// add autocompletion to the editor
 		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK), "autocomplete");

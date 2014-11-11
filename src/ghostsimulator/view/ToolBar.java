@@ -1,5 +1,6 @@
 package ghostsimulator.view;
 
+import ghostsimulator.GhostManager;
 import ghostsimulator.util.ImageLoader;
 
 import java.awt.Dimension;
@@ -17,9 +18,11 @@ public class ToolBar extends JToolBar {
 	private static Dimension DIM_SLIDER_HORIZONTAL = new Dimension(250,50);
 	private static Dimension DIM_SLIDER_VERTICAL = new Dimension(50,250);
 	private JSlider speedSlider;
+	private GhostManager manager;
 
-	public ToolBar() {
+	public ToolBar(GhostManager manager) {
 		super("Toolbar", SwingConstants.HORIZONTAL);
+		this.manager = manager;
 
 		JButton btnSave = new JButton(ImageLoader.getImageIcon("gnome-dev-floppy.png"));
 		btnSave.setToolTipText("Save");

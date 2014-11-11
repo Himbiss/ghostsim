@@ -12,10 +12,13 @@ public class GhostSimulator {
 	private static Territory territory;
 
 	public static void main(String[] args) {
-		editor = new Editor();
+		// create the model
 		territory = new Territory();
 		
-		GhostSimulatorFrame frame = new GhostSimulatorFrame(editor, territory);
+		GhostManager manager = new GhostManager();
+		manager.setTerritory(territory);
+		
+		GhostSimulatorFrame frame = new GhostSimulatorFrame(manager);
 		frame.setVisible(true);
 	}
 

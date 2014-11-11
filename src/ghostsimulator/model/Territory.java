@@ -15,8 +15,8 @@ import java.awt.Point;
  */
 public class Territory{
 
-	public static final int DEFAULT_COLUMN_CNT = 13;
-	public static final int DEFAULT_ROW_CNT = 13;
+	public static final int DEFAULT_COLUMN_CNT = 15;
+	public static final int DEFAULT_ROW_CNT = 10;
 
 	private Tile[][] territory;
 	private BooHoo boohoo;
