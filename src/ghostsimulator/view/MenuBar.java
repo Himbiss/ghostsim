@@ -1,6 +1,8 @@
 package ghostsimulator.view;
 import ghostsimulator.GhostManager;
+import ghostsimulator.util.ImageLoader;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -88,6 +90,12 @@ public class MenuBar extends JMenuBar {
 		pauseSimulationItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
 		stopSimulationItem.setMnemonic(KeyEvent.VK_T);
 		stopSimulationItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
+		
+		Cursor c = ImageLoader.getCursor("cursor.png");
+		editorMenu.setCursor(c);
+		simulationMenu.setCursor(c);
+		territoryMenu.setCursor(c);
+		setCursor(c);
 	}
 
 }

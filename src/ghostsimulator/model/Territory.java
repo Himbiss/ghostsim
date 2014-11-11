@@ -149,4 +149,8 @@ public class Territory extends Observable {
 	public int getRowCount() {
 		return rowCount;
 	}
+
+	public void setBooHooPosition(Point point) {
+		boohoo.setPosition(point);
+	}
 }

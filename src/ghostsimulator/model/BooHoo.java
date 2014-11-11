@@ -59,6 +59,14 @@ public class BooHoo extends Observable {
 	}
 	
 	/**
+	 * Sets the position of the boohoo
+	 * @param position
+	 */
+	void setPosition(Point position) {
+		this.position = position;
+	}
+	
+	/**
 	 * Returns the Direction in which the boohoo is facing
 	 * @return direction
 	 */

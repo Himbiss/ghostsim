@@ -7,10 +7,12 @@ import ghostsimulator.model.NoSpaceOnTileException;
 import ghostsimulator.model.Tile;
 import ghostsimulator.model.Tile.Wall;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.SwingUtilities;
 
@@ -18,9 +20,11 @@ import javax.swing.SwingUtilities;
  * Handels Mouse and Keboard Input for the TerritoryPanel
  * @author Vincent Ortland
  */
-public class TerritoryInputListener implements MouseListener, KeyListener {
+public class TerritoryInputListener implements MouseListener, MouseMotionListener, KeyListener {
 	
 	private GhostManager manager;
+	private int startX, startY, curX, curY;
+	private boolean isDragging;
 	
 	public TerritoryInputListener(GhostManager manager) {
 		this.manager = manager;
@@ -28,35 +32,6 @@ public class TerritoryInputListener implements MouseListener, KeyListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Tile tile = manager.getTerritoryPanel().getTileByPosition(e.getPoint());
-		if(tile != null) {
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				switch(manager.getToolbar().getSelectedTerritoryAction()) {
-				case DELETE:
-					doDelete(tile);
-					break;
-				case ADD_FIREBALL:
-					try{
-						tile.addFireball();
-					} catch (NoSpaceOnTileException ex) {
-						manager.getInfoLabel().setText(ex.getMessage());
-					}
-					break;
-				case ADD_REDWALL:
-					if(!tile.hasBooHoo())
-						tile.setWall(Wall.RED_WALL);
-					break;
-				case ADD_WHITEWALL:
-					if(!tile.hasBooHoo())
-						tile.setWall(Wall.WHITE_WALL);
-					break;
-				}
-			} else {
-				doDelete(tile);
-			}
-		}
-		manager.getTerritoryPanel().repaint();
-		manager.getTerritoryPanel().requestFocus();
 	}
 
 	/**
@@ -123,11 +98,72 @@ public class TerritoryInputListener implements MouseListener, KeyListener {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mousePressed(MouseEvent e) {
+		Tile tile = manager.getTerritoryPanel().getTileByPosition(e.getPoint());
+		if(tile != null) {
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				// check if the tile has the boohoo, then go into dragging mode
+				if(tile.hasBooHoo()) {
+					isDragging = true;
+					startX = e.getX();
+					startY = e.getY();
+					return;
+				}
+				// otherwide apply territory action
+				switch(manager.getToolbar().getSelectedTerritoryAction()) {
+				case DELETE:
+					doDelete(tile);
+					break;
+				case ADD_FIREBALL:
+					try{
+						tile.addFireball();
+					} catch (NoSpaceOnTileException ex) {
+						manager.getInfoLabel().setText(ex.getMessage());
+					}
+					break;
+				case ADD_REDWALL:
+					if(!tile.hasBooHoo())
+						tile.setWall(Wall.RED_WALL);
+					break;
+				case ADD_WHITEWALL:
+					if(!tile.hasBooHoo())
+						tile.setWall(Wall.WHITE_WALL);
+					break;
+				}
+			} else {
+				doDelete(tile);
+			}
+		}
+		manager.getTerritoryPanel().repaint();
+		manager.getTerritoryPanel().requestFocus();
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
+		Tile tile = manager.getTerritoryPanel().getTileByPosition(e.getPoint());
+		Tile source = manager.getTerritoryPanel().getTileByPosition(new Point(startX, startY));
+		if(tile != null && source != null) {
+			if (SwingUtilities.isLeftMouseButton(e) && isDragging) {
+				// check if the tile has a wall, otherwise drop the boohoo at this position
+				if(!tile.isWall()) {
+					source.leave();
+					tile.moveTo(manager.getTerritory().getBoohoo());
+					manager.getTerritory().setBooHooPosition(new Point(tile.getColumnIndex(),tile.getRowIndex()));
+					isDragging = false;
+				}
+				
+			}
+		}
+		manager.getTerritoryPanel().repaint();
+		manager.getTerritoryPanel().requestFocus();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
 	}
 	
 }

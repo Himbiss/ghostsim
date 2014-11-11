@@ -1,8 +1,10 @@
 package ghostsimulator.util;
 
 import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.MediaTracker;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.net.URL;
 
@@ -13,7 +15,8 @@ public class ImageLoader {
 	static MediaTracker tracker = new MediaTracker(new Container());
 
 	public static Image getImage(String name) {
-		URL url = ImageLoader.class.getClassLoader().getResource("resources/" + name);
+		URL url = ImageLoader.class.getClassLoader().getResource(
+				"resources/" + name);
 		Image img = Toolkit.getDefaultToolkit().createImage(url);
 		ImageLoader.tracker.addImage(img, 1);
 		try {
@@ -27,10 +30,19 @@ public class ImageLoader {
 	public static ImageIcon getImageIcon(String name) {
 		return new ImageIcon(ImageLoader.getImage(name));
 	}
-	
-	public static ImageIcon getScaledImageIcon(String name, int width, int height) {
-		Image img = ImageLoader.getImage(name).getScaledInstance(width, height, Image.SCALE_SMOOTH);
+
+	public static ImageIcon getScaledImageIcon(String name, int width,
+			int height) {
+		Image img = ImageLoader.getImage(name).getScaledInstance(width, height,
+				Image.SCALE_SMOOTH);
 		return new ImageIcon(img);
+	}
+
+	public static Cursor getCursor(String name) {
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Image image = getImage(name);
+		Cursor c = toolkit.createCustomCursor(image, new Point(0,0), name);
+		return c;
 	}
 
 }

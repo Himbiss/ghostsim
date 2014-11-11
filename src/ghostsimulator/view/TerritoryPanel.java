@@ -51,16 +51,21 @@ public class TerritoryPanel extends JPanel implements Observer {
 
 	public TerritoryPanel(GhostManager manager) {
 		this.manager = manager;
-		addMouseListener(new TerritoryInputListener(manager));
+		// add listener
+		TerritoryInputListener territoryListener = new TerritoryInputListener(manager);
+		addMouseListener(territoryListener);
+		addMouseMotionListener(territoryListener);
+		addKeyListener(territoryListener);
+		// instantiate objects
 		tiles = manager.getTerritory().getTerritory();
 		columnCount = manager.getTerritory().getColumnCount();
 		rowCount = manager.getTerritory().getRowCount();
 		statusFont = new Font("Arial", Font.BOLD, 12);
 		loadImages();
-		addKeyListener(new TerritoryInputListener(manager));
 		// register as observer
 		manager.getTerritory().addObserver(this);
 		manager.getTerritory().getBoohoo().addObserver(this);
+		setCursor(ImageLoader.getCursor("cursor.png"));
 	}
 
 	/**

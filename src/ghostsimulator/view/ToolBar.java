@@ -85,6 +85,8 @@ public class ToolBar extends JToolBar {
 		add(btnSimPause);
 		addSeparator();
 		add(speedSlider);
+		
+		setCursor(ImageLoader.getCursor("cursor.png"));
 	}
 
 	@Override
