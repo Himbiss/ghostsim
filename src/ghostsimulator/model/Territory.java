@@ -4,6 +4,7 @@ import ghostsimulator.model.BooHoo.Direction;
 import ghostsimulator.model.Tile.Wall;
 
 import java.awt.Point;
+import java.util.Observable;
 
 
 /**
@@ -13,7 +14,7 @@ import java.awt.Point;
  * @author Vincent Ortland
  * 
  */
-public class Territory{
+public class Territory extends Observable {
 
 	public static final int DEFAULT_COLUMN_CNT = 15;
 	public static final int DEFAULT_ROW_CNT = 10;
@@ -61,6 +62,8 @@ public class Territory{
 		}
 		Tile tile = getTile(boohooPosition);
 		tile.moveTo(boohoo);
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -68,8 +71,10 @@ public class Territory{
 	 * @param position
 	 * @return tile
 	 */
-	protected Tile getTile(Point position) {
-		return territory[position.x][position.y];
+	public Tile getTile(Point position) {
+		if((position.x >= 0 && position.x < columnCount) && (position.y >= 0 && position.y < rowCount))
+			return territory[position.x][position.y];
+		return null;
 	}
 
 	/**
@@ -88,6 +93,8 @@ public class Territory{
 		// if the fireball hit a red wall, remove it otherwise do nothing
 		if(currentTile.getWall() == Wall.RED_WALL)
 			currentTile.setWall(Wall.NO_WALL);
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**

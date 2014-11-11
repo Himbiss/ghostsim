@@ -19,6 +19,17 @@ public class ToolBar extends JToolBar {
 	private static Dimension DIM_SLIDER_VERTICAL = new Dimension(50,250);
 	private JSlider speedSlider;
 	private GhostManager manager;
+	private ButtonGroup territoryGroup;
+	private JToggleButton btnTerritoryFireball;
+	private JToggleButton btnTerritoryWhiteWall;
+	private JToggleButton btnTerritoryRedWall;
+	private JToggleButton btnTerritoryDelete;
+	
+	public ButtonGroup getTerritoryGroup() {
+		return territoryGroup;
+	}
+
+	public enum TerritoryAction {DELETE, ADD_FIREBALL, ADD_WHITEWALL, ADD_REDWALL};
 
 	public ToolBar(GhostManager manager) {
 		super("Toolbar", SwingConstants.HORIZONTAL);
@@ -29,20 +40,20 @@ public class ToolBar extends JToolBar {
 		JButton btnCompile = new JButton(ImageLoader.getImageIcon("Compile24.gif"));
 		btnCompile.setToolTipText("Compile");
 
-		JToggleButton btnTerritoryEktoplasm = new JToggleButton(ImageLoader.getImageIcon("fireball.png"));
-		btnTerritoryEktoplasm.setToolTipText("Add a fireball to the territory");
-		JToggleButton btnTerritoryWhiteWall = new JToggleButton(ImageLoader.getScaledImageIcon("white_wall.png", 28, 24));
+		btnTerritoryFireball = new JToggleButton(ImageLoader.getImageIcon("fireball.png"));
+		btnTerritoryFireball.setToolTipText("Add a fireball to the territory");
+		btnTerritoryWhiteWall = new JToggleButton(ImageLoader.getScaledImageIcon("white_wall.png", 28, 24),true);
 		btnTerritoryWhiteWall.setToolTipText("Add a steel wall to the territory");
-		JToggleButton btnTerritoryRedWall = new JToggleButton(ImageLoader.getScaledImageIcon("red_wall.png", 28, 24));
+		btnTerritoryRedWall = new JToggleButton(ImageLoader.getScaledImageIcon("red_wall.png", 28, 24));
 		btnTerritoryRedWall.setToolTipText("Add a brick wall to the territory");
-		JToggleButton btnTerritoryDelete = new JToggleButton(ImageLoader.getImageIcon("Delete24.gif"));
+		btnTerritoryDelete = new JToggleButton(ImageLoader.getImageIcon("Delete24.gif"));
 		btnTerritoryDelete.setToolTipText("Delete something from the territory");
 		
-		ButtonGroup territoryGroup = new ButtonGroup();
+		territoryGroup = new ButtonGroup();
 		territoryGroup.add(btnTerritoryDelete);
 		territoryGroup.add(btnTerritoryWhiteWall);
 		territoryGroup.add(btnTerritoryRedWall);
-		territoryGroup.add(btnTerritoryEktoplasm);
+		territoryGroup.add(btnTerritoryFireball);
 
 		JButton btnSimStart = new JButton(ImageLoader.getImageIcon("Run24.gif"));
 		btnSimStart.setToolTipText("Start the simulation");
@@ -65,7 +76,7 @@ public class ToolBar extends JToolBar {
 		add(btnCompile);
 		addSeparator();
 		add(btnTerritoryDelete);
-		add(btnTerritoryEktoplasm);
+		add(btnTerritoryFireball);
 		add(btnTerritoryWhiteWall);
 		add(btnTerritoryRedWall);
 		addSeparator();
@@ -92,5 +103,16 @@ public class ToolBar extends JToolBar {
 		super.setOrientation(o);
 	}
 	
+	
+	public TerritoryAction getSelectedTerritoryAction() {
+		if(btnTerritoryWhiteWall.isSelected())
+			return TerritoryAction.ADD_WHITEWALL;
+		else if(btnTerritoryFireball.isSelected())
+			return TerritoryAction.ADD_FIREBALL;
+		else if(btnTerritoryRedWall.isSelected())
+			return TerritoryAction.ADD_REDWALL;
+		else
+			return TerritoryAction.DELETE;
+	}
 	
 }

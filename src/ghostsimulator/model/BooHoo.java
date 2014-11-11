@@ -1,6 +1,7 @@
 package ghostsimulator.model;
 
 import java.awt.Point;
+import java.util.Observable;
 
 
 /**
@@ -8,7 +9,7 @@ import java.awt.Point;
  * @author Vincent Ortland
  *
  */
-public class BooHoo {
+public class BooHoo extends Observable {
 
 	/**
 	 * The direction in which the boohoo is facing
@@ -91,6 +92,8 @@ public class BooHoo {
 			throw new NoFireballAtTileException(tile);
 		tile.removeFireball();
 		numFireballs++;
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -103,6 +106,8 @@ public class BooHoo {
 		Tile tile = territory.getTile(position);
 		tile.addFireball();
 		numFireballs--;
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -136,6 +141,8 @@ public class BooHoo {
 	 */
 	public void turnLeft() {
 		direction = Direction.getTurnLeft(direction);
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**
@@ -147,11 +154,15 @@ public class BooHoo {
 		Tile currTile = territory.getTile(position);
 		Tile frontTile = territory.getTile(getPositionInFront());
 		
-		if(frontTile.isWall())
-			throw new WallInFrontException(frontTile);
-		currTile.leave();
-		position = getPositionInFront();
-		frontTile.moveTo(this);
+		if(frontTile != null) {
+			if(frontTile.isWall())
+				throw new WallInFrontException(frontTile);
+			currTile.leave();
+			position = getPositionInFront();
+			frontTile.moveTo(this);
+			setChanged();
+			notifyObservers();
+		}
 	}
 	
 	public void shootFireball() throws HasNoFireballException {
@@ -159,6 +170,8 @@ public class BooHoo {
 			throw new HasNoFireballException();
 		numFireballs--;
 		territory.shootFireball(position, direction);
+		setChanged();
+		notifyObservers();
 	}
 	
 	@Override

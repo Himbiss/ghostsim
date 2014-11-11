@@ -1,17 +1,18 @@
 package ghostsimulator.controller;
 
+import ghostsimulator.GhostManager;
+import ghostsimulator.GhostSimulator;
+import ghostsimulator.model.BooHoo;
+import ghostsimulator.model.NoSpaceOnTileException;
+import ghostsimulator.model.Tile;
+import ghostsimulator.model.Tile.Wall;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.SwingUtilities;
-
-import ghostsimulator.GhostManager;
-import ghostsimulator.GhostSimulator;
-import ghostsimulator.model.BooHoo;
-import ghostsimulator.model.NoSpaceOnTileException;
-import ghostsimulator.model.Tile;
 
 /**
  * Handels Mouse and Keboard Input for the TerritoryPanel
@@ -28,19 +29,46 @@ public class TerritoryInputListener implements MouseListener, KeyListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		Tile tile = manager.getTerritoryPanel().getTileByPosition(e.getPoint());
-		if (SwingUtilities.isLeftMouseButton(e)) {
-			if (tile != null) {
-				try{
-					tile.addFireball();
-				} catch (NoSpaceOnTileException ex) {
-					System.err.println(ex.getMessage());
+		if(tile != null) {
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				switch(manager.getToolbar().getSelectedTerritoryAction()) {
+				case DELETE:
+					doDelete(tile);
+					break;
+				case ADD_FIREBALL:
+					try{
+						tile.addFireball();
+					} catch (NoSpaceOnTileException ex) {
+						manager.getInfoLabel().setText(ex.getMessage());
+					}
+					break;
+				case ADD_REDWALL:
+					if(!tile.hasBooHoo())
+						tile.setWall(Wall.RED_WALL);
+					break;
+				case ADD_WHITEWALL:
+					if(!tile.hasBooHoo())
+						tile.setWall(Wall.WHITE_WALL);
+					break;
 				}
+			} else {
+				doDelete(tile);
 			}
-		} else {
-			tile.removeFireball();
 		}
-
 		manager.getTerritoryPanel().repaint();
+		manager.getTerritoryPanel().requestFocus();
+	}
+
+	/**
+	 * Invoked if the user wants to delete something from a tile.
+	 * First the wall is deleted and after that the fire balls, one at a time.
+	 * @param tile
+	 */
+	private void doDelete(Tile tile) {
+		if(tile.isWall())
+			tile.setWall(Wall.NO_WALL);
+		else if(tile.hasFireballs())
+			tile.removeFireball();
 	}
 
 	@Override

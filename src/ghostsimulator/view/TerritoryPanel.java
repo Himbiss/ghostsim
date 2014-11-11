@@ -22,12 +22,13 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.Transient;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-
-public class TerritoryPanel extends JPanel{
+public class TerritoryPanel extends JPanel implements Observer {
 
 	public static int TILE_SIZE = 51;
 
@@ -47,7 +48,6 @@ public class TerritoryPanel extends JPanel{
 	private Image whiteWallImage;
 	private Image sandTileImage;
 	private Image fireballAnimatedImage;
-	
 
 	public TerritoryPanel(GhostManager manager) {
 		this.manager = manager;
@@ -58,6 +58,9 @@ public class TerritoryPanel extends JPanel{
 		statusFont = new Font("Arial", Font.BOLD, 12);
 		loadImages();
 		addKeyListener(new TerritoryInputListener(manager));
+		// register as observer
+		manager.getTerritory().addObserver(this);
+		manager.getTerritory().getBoohoo().addObserver(this);
 	}
 
 	/**
@@ -87,7 +90,7 @@ public class TerritoryPanel extends JPanel{
 		int cntRow = (pos.y - offsetY) / TILE_SIZE;
 		if (cntColumn < columnCount && cntRow < rowCount && cntColumn >= 0
 				&& cntRow >= 0)
-			return tiles[cntColumn][cntRow]; 
+			return tiles[cntColumn][cntRow];
 		return null;
 	}
 
@@ -103,17 +106,19 @@ public class TerritoryPanel extends JPanel{
 		Graphics2D g2d = (Graphics2D) g;
 
 		if (g2d != null) {
-			
+
 			// draw the stats
 			drawStats(g2d);
 
 			// draw the background
 			drawBackground(g2d);
-			
+
 			// draw boohoo
-			int startX = offsetX + manager.getTerritory().getBoohooPosition().x * TILE_SIZE;
-			int startY = offsetY + manager.getTerritory().getBoohooPosition().y * TILE_SIZE;
-			
+			int startX = offsetX + manager.getTerritory().getBoohooPosition().x
+					* TILE_SIZE;
+			int startY = offsetY + manager.getTerritory().getBoohooPosition().y
+					* TILE_SIZE;
+
 			Image boohooImg = boohooEastImage;
 			switch (manager.getTerritory().getBoohooDirection()) {
 			case NORTH:
@@ -141,31 +146,35 @@ public class TerritoryPanel extends JPanel{
 
 			// draw debug information like the front tile of the boohoo
 			if (GhostSimulator.DEBUG_MODE) {
-				Point frontPosition = Territory.advancePosition(
-						manager.getTerritory().getBoohooPosition(),
-						manager.getTerritory().getBoohooDirection());
-				Tile frontTile = manager.getTerritory().getTerritory()[frontPosition.x][frontPosition.y];
-				int startXTile = offsetX + frontTile.getColumnIndex()
-						* TILE_SIZE;
-				int startYTile = offsetY + frontTile.getRowIndex() * TILE_SIZE;
-				if (frontTile.isWall()) {
-					g2d.setColor(new Color(100, 0, 0, 120));
-				} else {
-					g2d.setColor(new Color(0, 100, 0, 120));
-				}
+				Point frontPosition = Territory.advancePosition(manager
+						.getTerritory().getBoohooPosition(), manager
+						.getTerritory().getBoohooDirection());
+				Tile frontTile = manager.getTerritory().getTile(frontPosition);
+				if (frontTile != null) {
+					int startXTile = offsetX + frontTile.getColumnIndex()
+							* TILE_SIZE;
+					int startYTile = offsetY + frontTile.getRowIndex()
+							* TILE_SIZE;
+					if (frontTile.isWall()) {
+						g2d.setColor(new Color(100, 0, 0, 120));
+					} else {
+						g2d.setColor(new Color(0, 100, 0, 120));
+					}
 
-				g2d.fillRect(startXTile, startYTile, TILE_SIZE, TILE_SIZE);
+					g2d.fillRect(startXTile, startYTile, TILE_SIZE, TILE_SIZE);
+				}
 			}
 
 			// draw the grid
 			drawGrid(g2d);
-			
+
 			g2d.dispose();
 		}
 	}
-	
+
 	/**
 	 * Draws the background images for the tiles
+	 * 
 	 * @param g2d
 	 */
 	private void drawBackground(Graphics2D g2d) {
@@ -173,14 +182,16 @@ public class TerritoryPanel extends JPanel{
 			for (int column = 0; column < columnCount; column++) {
 				int startX = offsetX + column * TILE_SIZE;
 				int startY = offsetY + row * TILE_SIZE;
-				//draw background image
-				g2d.drawImage(sandTileImage, startX, startY, TILE_SIZE, TILE_SIZE, null);
+				// draw background image
+				g2d.drawImage(sandTileImage, startX, startY, TILE_SIZE,
+						TILE_SIZE, null);
 			}
 		}
 	}
-	
+
 	/**
 	 * Draws the status of the boo, for example how many fireballs it has
+	 * 
 	 * @param g2d
 	 */
 	private void drawStats(Graphics2D g2d) {
@@ -193,8 +204,9 @@ public class TerritoryPanel extends JPanel{
 		int stringWidth = metrics.stringWidth(str);
 		int fireballWidth = fireballImage.getWidth(this);
 		g2d.drawString("Fireballs:", startX, startY);
-		for(int x=startX+stringWidth; x<manager.getTerritory().getBoohooNumFireballs()*fireballWidth+startX+stringWidth; x+=fireballWidth) {
-			g2d.drawImage(fireballImage, x, startY-metrics.getHeight(), this);
+		for (int x = startX + stringWidth; x < manager.getTerritory()
+				.getBoohooNumFireballs() * fireballWidth + startX + stringWidth; x += fireballWidth) {
+			g2d.drawImage(fireballImage, x, startY - metrics.getHeight(), this);
 		}
 	}
 
@@ -235,7 +247,7 @@ public class TerritoryPanel extends JPanel{
 	private void drawTile(Tile tile, Graphics2D g2d) {
 		int startX = offsetX + tile.getColumnIndex() * TILE_SIZE;
 		int startY = offsetY + tile.getRowIndex() * TILE_SIZE;
-		
+
 		// draw wall if present
 		switch (tile.getWall()) {
 		case RED_WALL:
@@ -257,7 +269,7 @@ public class TerritoryPanel extends JPanel{
 
 				int fireballCounter = tile.numFireballs();
 
-				for (int row = fireballRows-1; row >= 0; row--) {
+				for (int row = fireballRows - 1; row >= 0; row--) {
 					for (int f = 0; f < objectsPerRow; f++) {
 						int fX = startX + f * objectWidth;
 						int fY = startY + row * objectHeight;
@@ -275,12 +287,13 @@ public class TerritoryPanel extends JPanel{
 		// draw debug information
 		if (GhostSimulator.DEBUG_MODE) {
 			g2d.setColor(Color.RED);
-			String str = "(" + tile.getColumnIndex() + "|" + tile.getRowIndex()+ ")";
+			String str = "(" + tile.getColumnIndex() + "|" + tile.getRowIndex()
+					+ ")";
 			int posX = startX + (TILE_SIZE / 2);
 			int posY = startY + (TILE_SIZE / 2);
 			FontMetrics metrics = g2d.getFontMetrics(g2d.getFont());
-			posX -= metrics.stringWidth(str)/2;
-			posY += metrics.getHeight()/2;
+			posX -= metrics.stringWidth(str) / 2;
+			posY += metrics.getHeight() / 2;
 			g2d.drawString(str, posX, posY);
 		}
 	}
@@ -296,5 +309,10 @@ public class TerritoryPanel extends JPanel{
 	public void addNotify() {
 		super.addNotify();
 		requestFocus();
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		repaint();
 	}
 }
