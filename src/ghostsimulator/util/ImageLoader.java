@@ -1,4 +1,4 @@
-package util;
+package ghostsimulator.util;
 
 import java.awt.Container;
 import java.awt.Image;

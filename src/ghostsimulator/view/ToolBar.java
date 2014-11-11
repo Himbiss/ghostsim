@@ -1,4 +1,6 @@
-package ghostsimulator;
+package ghostsimulator.view;
+
+import ghostsimulator.util.ImageLoader;
 
 import java.awt.Dimension;
 
@@ -9,7 +11,6 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-import util.ImageLoader;
 
 public class ToolBar extends JToolBar {
 

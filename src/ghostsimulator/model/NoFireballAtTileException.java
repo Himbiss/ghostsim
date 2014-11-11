@@ -1,4 +1,4 @@
-package territory;
+package ghostsimulator.model;
 
 import ghostsimulator.GhostSimulator;
 

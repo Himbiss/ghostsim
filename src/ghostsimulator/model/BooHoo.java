@@ -1,6 +1,7 @@
-package territory;
+package ghostsimulator.model;
 
 import java.awt.Point;
+
 
 /**
  * This is the actor class. It represents the character BooHoo from SuperMario.

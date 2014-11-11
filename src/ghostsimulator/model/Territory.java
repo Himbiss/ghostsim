@@ -1,9 +1,10 @@
-package territory;
+package ghostsimulator.model;
+
+import ghostsimulator.model.BooHoo.Direction;
+import ghostsimulator.model.Tile.Wall;
 
 import java.awt.Point;
 
-import territory.BooHoo.Direction;
-import territory.Tile.Wall;
 
 /**
  * This class represents a two dimensional territory of fixed size. It has one
@@ -14,8 +15,8 @@ import territory.Tile.Wall;
  */
 public class Territory{
 
-	public static final int DEFAULT_COLUMN_CNT = 15;
-	public static final int DEFAULT_ROW_CNT = 10;
+	public static final int DEFAULT_COLUMN_CNT = 13;
+	public static final int DEFAULT_ROW_CNT = 13;
 
 	private Tile[][] territory;
 	private BooHoo boohoo;

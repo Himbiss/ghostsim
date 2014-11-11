@@ -1,5 +1,7 @@
-/ghostsimulator/
-/resources/
-/simulation/
 /territory/
+/ghostsimulator/
+/model/
+/view/
+/controller/
+/simulation/
 /util/

@@ -1,4 +1,6 @@
-package ghostsimulator;
+package ghostsimulator.view;
+
+import ghostsimulator.controller.AutocompleteAction;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -9,6 +11,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
+
 
 /**
  * An editor in which the user can write code that can be executed

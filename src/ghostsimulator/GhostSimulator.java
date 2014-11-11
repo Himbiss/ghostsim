@@ -1,6 +1,8 @@
 package ghostsimulator;
 
-import territory.Territory;
+import ghostsimulator.model.Territory;
+import ghostsimulator.view.Editor;
+import ghostsimulator.view.GhostSimulatorFrame;
 
 public class GhostSimulator {
 

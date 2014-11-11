@@ -1,4 +1,8 @@
-package ghostsimulator;
+package ghostsimulator.controller;
+
+
+import ghostsimulator.util.ImageLoader;
+import ghostsimulator.view.Editor;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
@@ -11,7 +15,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.text.BadLocationException;
 
-import util.ImageLoader;
 
 
 public class AutocompleteAction implements Action {

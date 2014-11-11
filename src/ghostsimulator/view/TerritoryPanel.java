@@ -1,4 +1,11 @@
-package ghostsimulator;
+package ghostsimulator.view;
+
+import ghostsimulator.GhostSimulator;
+import ghostsimulator.model.BooHoo;
+import ghostsimulator.model.NoSpaceOnTileException;
+import ghostsimulator.model.Territory;
+import ghostsimulator.model.Tile;
+import ghostsimulator.util.ImageLoader;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -17,11 +24,6 @@ import java.beans.Transient;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import territory.BooHoo;
-import territory.NoSpaceOnTileException;
-import territory.Territory;
-import territory.Tile;
-import util.ImageLoader;
 
 public class TerritoryPanel extends JPanel implements MouseListener,
 		KeyListener {
@@ -84,7 +86,7 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 		int cntRow = (pos.y - offsetY) / TILE_SIZE;
 		if (cntColumn < columnCount && cntRow < rowCount && cntColumn >= 0
 				&& cntRow >= 0)
-			return tiles[cntColumn][cntRow];
+			return tiles[cntColumn][cntRow]; 
 		return null;
 	}
 

@@ -1,4 +1,7 @@
-package ghostsimulator;
+package ghostsimulator.view;
+
+import ghostsimulator.model.Territory;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 
@@ -8,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import territory.Territory;
 
 /**
  * A {@link JFrame} that is the main frame of this program
