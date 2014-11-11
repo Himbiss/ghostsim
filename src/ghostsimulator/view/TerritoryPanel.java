@@ -2,6 +2,7 @@ package ghostsimulator.view;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.GhostSimulator;
+import ghostsimulator.controller.TerritoryInputListener;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.NoSpaceOnTileException;
 import ghostsimulator.model.Territory;
@@ -26,8 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 
-public class TerritoryPanel extends JPanel implements MouseListener,
-		KeyListener {
+public class TerritoryPanel extends JPanel{
 
 	public static int TILE_SIZE = 51;
 
@@ -51,13 +51,13 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 
 	public TerritoryPanel(GhostManager manager) {
 		this.manager = manager;
-		addMouseListener(this);
+		addMouseListener(new TerritoryInputListener(manager));
 		tiles = manager.getTerritory().getTerritory();
 		columnCount = manager.getTerritory().getColumnCount();
 		rowCount = manager.getTerritory().getRowCount();
 		statusFont = new Font("Arial", Font.BOLD, 12);
 		loadImages();
-		addKeyListener(this);
+		addKeyListener(new TerritoryInputListener(manager));
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 	 * 
 	 * @return tile
 	 */
-	private Tile getTileByPosition(Point pos) {
+	public Tile getTileByPosition(Point pos) {
 		int cntColumn = (pos.x - offsetX) / TILE_SIZE;
 		int cntRow = (pos.y - offsetY) / TILE_SIZE;
 		if (cntColumn < columnCount && cntRow < rowCount && cntColumn >= 0
@@ -297,83 +297,4 @@ public class TerritoryPanel extends JPanel implements MouseListener,
 		super.addNotify();
 		requestFocus();
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		Tile tile = getTileByPosition(e.getPoint());
-		if (SwingUtilities.isLeftMouseButton(e)) {
-			if (tile != null) {
-				try{
-					tile.addFireball();
-				} catch (NoSpaceOnTileException ex) {
-					System.err.println(ex.getMessage());
-				}
-			}
-		} else {
-			tile.removeFireball();
-		}
-
-		repaint();
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		requestFocus();
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		int keyCode = e.getKeyCode();
-		try {
-			BooHoo boohoo = manager.getTerritory().getBoohoo();
-			switch (keyCode) {
-			case KeyEvent.VK_T:
-				boohoo.takeFireball();
-				break;
-			case KeyEvent.VK_P:
-				boohoo.putDownFireball();
-				break;
-			case KeyEvent.VK_UP:
-				boohoo.moveForward();
-				break;
-			case KeyEvent.VK_SPACE:
-				boohoo.shootFireball();
-				break;
-			case KeyEvent.VK_LEFT:
-				boohoo.turnLeft();
-				break;
-			case KeyEvent.VK_RIGHT:
-				boohoo.turnLeft();
-				boohoo.turnLeft();
-				boohoo.turnLeft();
-				break;
-			case KeyEvent.VK_D:
-				GhostSimulator.DEBUG_MODE = !GhostSimulator.DEBUG_MODE;
-			}
-		} catch (Exception ex) {
-			System.err.println(ex.getMessage());
-		}
-		repaint();
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-	}
-
 }
