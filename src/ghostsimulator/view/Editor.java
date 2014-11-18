@@ -2,14 +2,23 @@ package ghostsimulator.view;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.controller.AutocompleteAction;
+import ghostsimulator.controller.EditorManager;
+import ghostsimulator.model.BooHoo;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
-import javax.swing.Action;
 import javax.swing.JEditorPane;
 import javax.swing.KeyStroke;
 
@@ -26,10 +35,14 @@ public class Editor extends JEditorPane {
 	
 	public Editor(GhostManager manager) {
 		this.manager = manager;
-		setPreferredSize(new Dimension(300, 0));
 		// add autocompletion to the editor
 		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK), "autocomplete");
 		getActionMap().put("autocomplete", new AutocompleteAction(this));
+	}
+	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(300, 0);
 	}
 
 	

@@ -64,6 +64,8 @@ public class BooHoo extends Observable {
 	 */
 	void setPosition(Point position) {
 		this.position = position;
+		setChanged();
+		notifyObservers();
 	}
 	
 	/**

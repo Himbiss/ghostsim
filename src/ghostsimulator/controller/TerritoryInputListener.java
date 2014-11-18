@@ -154,8 +154,6 @@ public class TerritoryInputListener implements MouseListener, MouseMotionListene
 				
 			}
 		}
-		manager.getTerritoryPanel().repaint();
-		manager.getTerritoryPanel().requestFocus();
 	}
 
 	@Override

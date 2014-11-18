@@ -4,6 +4,8 @@ import ghostsimulator.GhostManager;
 import ghostsimulator.util.ImageLoader;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -31,12 +33,19 @@ public class ToolBar extends JToolBar {
 
 	public enum TerritoryAction {DELETE, ADD_FIREBALL, ADD_WHITEWALL, ADD_REDWALL};
 
-	public ToolBar(GhostManager manager) {
+	public ToolBar(final GhostManager manager) {
 		super("Toolbar", SwingConstants.HORIZONTAL);
 		this.manager = manager;
 
 		JButton btnSave = new JButton(ImageLoader.getImageIcon("gnome-dev-floppy.png"));
 		btnSave.setToolTipText("Save");
+		btnSave.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				manager.getEditorManager().saveEditor();
+			}
+		});
 		JButton btnCompile = new JButton(ImageLoader.getImageIcon("Compile24.gif"));
 		btnCompile.setToolTipText("Compile");
 

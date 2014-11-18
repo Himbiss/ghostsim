@@ -152,5 +152,7 @@ public class Territory extends Observable {
 
 	public void setBooHooPosition(Point point) {
 		boohoo.setPosition(point);
+		setChanged();
+		notifyObservers();
 	}
 }

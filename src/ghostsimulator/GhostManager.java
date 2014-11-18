@@ -2,6 +2,7 @@ package ghostsimulator;
 
 import javax.swing.JLabel;
 
+import ghostsimulator.controller.EditorManager;
 import ghostsimulator.model.Territory;
 import ghostsimulator.view.Editor;
 import ghostsimulator.view.GhostSimulatorFrame;
@@ -22,7 +23,14 @@ public class GhostManager {
 	private GhostSimulatorFrame frame;
 	private TerritoryPanel territoryPanel;
 	private JLabel infoLabel;
+	private EditorManager editorManager;
 	
+	public EditorManager getEditorManager() {
+		return editorManager;
+	}
+	public void setEditorManager(EditorManager editorManager) {
+		this.editorManager = editorManager;
+	}
 	public Territory getTerritory() {
 		return territory;
 	}

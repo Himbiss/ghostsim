@@ -1,6 +1,7 @@
 package ghostsimulator.view;
 
 import ghostsimulator.GhostManager;
+import ghostsimulator.controller.EditorManager;
 import ghostsimulator.model.Territory;
 
 import java.awt.BorderLayout;
@@ -33,6 +34,7 @@ public class GhostSimulatorFrame extends JFrame {
 		setVisible(true);
 		
 		Editor editor = new Editor(manager);
+		EditorManager editorManager = new EditorManager(manager);
 		
 		// add menu bar
 		MenuBar menuBar = new MenuBar(manager);
@@ -61,10 +63,14 @@ public class GhostSimulatorFrame extends JFrame {
 		
 		// add view widgets to the manager
 		manager.setEditor(editor);
+		manager.setEditorManager(editorManager);
 		manager.setMenubar(menuBar);
 		manager.setToolbar(toolBar);
 		manager.setInfoLabel(infoLabel);
 		manager.setTerritoryPanel(territoryPanel);
+		
+		// load default file into editor
+		manager.getEditorManager().loadDefaultFile();
 	}
 	
 	/**

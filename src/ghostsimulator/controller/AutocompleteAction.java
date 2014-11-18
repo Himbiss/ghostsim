@@ -60,9 +60,10 @@ public class AutocompleteAction implements Action {
 
 	@Override
 	public void actionPerformed(ActionEvent ev) {
-		System.out.println("Action performed!");
-		Point caretPosition = editor.getCaret().getMagicCaretPosition();
-		popup.show(editor, caretPosition.x, caretPosition.y);
+		if(editor != null && popup != null) {
+			Point caretPosition = editor.getCaret().getMagicCaretPosition();
+			popup.show(editor, caretPosition.x, caretPosition.y);
+		}
 	}
 
 	@Override
