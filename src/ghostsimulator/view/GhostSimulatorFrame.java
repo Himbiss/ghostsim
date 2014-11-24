@@ -27,7 +27,7 @@ public class GhostSimulatorFrame extends JFrame {
 
 	public GhostSimulatorFrame(GhostManager manager) {
 		// setup frame
-		setSize(900, 700);
+		setSize(1000, 800);
 		setLayout(new BorderLayout()); 
 		setTitle("Ghost Simulator");
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);

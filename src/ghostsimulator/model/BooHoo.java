@@ -50,6 +50,10 @@ public class BooHoo extends Observable {
 		numFireballs = 3;
 	}
 	
+	public BooHoo() {
+		
+	}
+	
 	/**
 	 * Returns the position of the boohooo
 	 * @return position

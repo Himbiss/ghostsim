@@ -48,6 +48,13 @@ public class ToolBar extends JToolBar {
 		});
 		JButton btnCompile = new JButton(ImageLoader.getImageIcon("Compile24.gif"));
 		btnCompile.setToolTipText("Compile");
+		btnCompile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				manager.getEditorManager().compile();
+			}
+		});
 
 		btnTerritoryFireball = new JToggleButton(ImageLoader.getImageIcon("fireball.png"));
 		btnTerritoryFireball.setToolTipText("Add a fireball to the territory");

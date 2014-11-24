@@ -42,8 +42,6 @@ public class Editor extends JEditorPane {
 	
 	@Override
 	public Dimension getPreferredSize() {
-		return new Dimension(300, 0);
+		return new Dimension(300, 300);
 	}
-
-	
 }
