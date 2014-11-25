@@ -16,7 +16,7 @@ import java.util.Observable;
  */
 public class Territory extends Observable {
 
-	public static final int DEFAULT_COLUMN_CNT = 15;
+	public static final int DEFAULT_COLUMN_CNT = 10;
 	public static final int DEFAULT_ROW_CNT = 10;
 
 	private Tile[][] territory;

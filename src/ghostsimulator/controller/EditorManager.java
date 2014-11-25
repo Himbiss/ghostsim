@@ -2,6 +2,7 @@ package ghostsimulator.controller;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.model.BooHoo;
+import ghostsimulator.view.CompilationResultPanel;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,6 +11,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.tools.JavaCompiler;
@@ -107,7 +109,7 @@ public class EditorManager {
 	}
 
 	/**
-	 * Compiles the current Code
+	 * Compiles the current Code in the editor and shows an error message if something went wrong
 	 */
 	public void compile() {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
@@ -123,10 +125,28 @@ public class EditorManager {
 			e.printStackTrace();
 		}
 		
+		// create a new result pane for showing the compilation result
+		CompilationResultPanel resultPanel = new CompilationResultPanel();
+		
 		// compile everything
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		int result = compiler.run(null, null, null, file.getAbsolutePath());
-		System.err.println(result);
+		int result = compiler.run(null, resultPanel.getCompilationResultStream(), resultPanel.getCompilationResultStream(), file.getAbsolutePath());
+				
+		if(result == 1) {
+			JOptionPane.showConfirmDialog(null,
+					resultPanel,
+					"Error during Compilation!",
+					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE);
+		} else {
+			JOptionPane.showConfirmDialog(null,
+					"The compilation succeeded! :]",
+	                "Compilation Succeeded!",
+	                JOptionPane.OK_CANCEL_OPTION,
+	                JOptionPane.PLAIN_MESSAGE);
+		}
+		
+		
 		// write old stuff from the editor to file
 		saveEditor();
 		clearEditor();
@@ -135,7 +155,10 @@ public class EditorManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// load the boohoo with a class loader, instantiate it and add it to the territory
-		manager.getTerritoryManager().exchangeBooHoo();
+		
+		if(result == 0) {
+			// load the boohoo with a class loader, instantiate it and add it to the territory
+			manager.getTerritoryManager().exchangeBooHoo();
+		}
 	}
 }
