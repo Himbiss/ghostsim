@@ -66,6 +66,18 @@ public class Territory extends Observable {
 		notifyObservers();
 	}
 	
+	public void exchangeBooHoo(BooHoo newBoo) {
+		newBoo.setPosition(getBoohooPosition());
+		newBoo.setTerritory(this);
+		boohoo.deleteObservers();
+		Tile standing = getTile(boohoo.getPosition());
+		standing.leave();
+		boohoo = newBoo;
+		standing.moveTo(boohoo);
+		setChanged();
+		notifyObservers();
+	}
+	
 	/**
 	 * Returns the tile at 'position'
 	 * @param position

@@ -17,8 +17,8 @@ import javax.tools.ToolProvider;
 
 public class EditorManager {
 
-	private final static String DIRECTORY = "programs";
-	private final static String PROGRAM_NAME = "GhostProgram";
+	public final static String DIRECTORY = "programs";
+	public final static String PROGRAM_NAME = "GhostProgram";
 	private final static String PROGRAM_PREFIX = "public class " + PROGRAM_NAME
 			+ " extends " + BooHoo.class.getCanonicalName() + " {\n public ";
 	private final static String PROGRAM_POSTFIX = "\n}";
@@ -135,5 +135,7 @@ public class EditorManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		// load the boohoo with a class loader, instantiate it and add it to the territory
+		manager.getTerritoryManager().exchangeBooHoo();
 	}
 }

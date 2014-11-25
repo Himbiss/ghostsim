@@ -2,6 +2,7 @@ package ghostsimulator.view;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.controller.EditorManager;
+import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
 
 import java.awt.BorderLayout;
@@ -46,6 +47,7 @@ public class GhostSimulatorFrame extends JFrame {
 		
 		// create the territory panel
 		TerritoryPanel territoryPanel = new TerritoryPanel(manager);
+		TerritoryManager terrManager = new TerritoryManager(manager);
 		
 		// create split pane and add editor and territory in scroll panes
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -68,6 +70,7 @@ public class GhostSimulatorFrame extends JFrame {
 		manager.setToolbar(toolBar);
 		manager.setInfoLabel(infoLabel);
 		manager.setTerritoryPanel(territoryPanel);
+		manager.setTerritoryManager(terrManager);
 		
 		// load default file into editor
 		manager.getEditorManager().loadDefaultFile();

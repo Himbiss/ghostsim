@@ -3,6 +3,7 @@ package ghostsimulator;
 import javax.swing.JLabel;
 
 import ghostsimulator.controller.EditorManager;
+import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
 import ghostsimulator.view.Editor;
 import ghostsimulator.view.GhostSimulatorFrame;
@@ -24,6 +25,7 @@ public class GhostManager {
 	private TerritoryPanel territoryPanel;
 	private JLabel infoLabel;
 	private EditorManager editorManager;
+	private TerritoryManager terrManager ;
 	
 	public EditorManager getEditorManager() {
 		return editorManager;
@@ -72,6 +74,13 @@ public class GhostManager {
 	}
 	public void setInfoLabel(JLabel infoLabel) {
 		this.infoLabel = infoLabel;
+	}
+	public void setTerritoryManager(TerritoryManager terrManager) {
+		this.terrManager = terrManager;
+	}
+	
+	public TerritoryManager getTerritoryManager() {
+		return this.terrManager;
 	}
 	
 }

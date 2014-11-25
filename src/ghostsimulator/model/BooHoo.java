@@ -51,7 +51,9 @@ public class BooHoo extends Observable {
 	}
 	
 	public BooHoo() {
-		
+		// set the direction automatically to East
+		direction = Direction.EAST;
+		numFireballs = 3;
 	}
 	
 	/**
@@ -60,6 +62,10 @@ public class BooHoo extends Observable {
 	 */
 	Point getPosition() {
 		return position;
+	}
+
+	void setTerritory(Territory territory) {
+		this.territory = territory;
 	}
 	
 	/**
