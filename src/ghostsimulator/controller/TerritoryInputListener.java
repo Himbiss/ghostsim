@@ -139,7 +139,7 @@ public class TerritoryInputListener implements MouseListener, MouseMotionListene
 			} else {
 				if(tile.hasBooHoo()) {
 					// show popup menu
-					MethodPopupMenu menu = new MethodPopupMenu(manager.getTerritory().getBoohoo());
+					MethodPopupMenu menu = new MethodPopupMenu(manager);
 					menu.setLocation(e.getLocationOnScreen());
 					menu.show(manager.getTerritoryPanel(), e.getX(), e.getY());
 					return;

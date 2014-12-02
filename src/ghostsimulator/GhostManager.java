@@ -1,10 +1,16 @@
 package ghostsimulator;
 
+import java.io.FileInputStream;
+
 import javax.swing.JLabel;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import ghostsimulator.controller.EditorManager;
 import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
+import ghostsimulator.util.AudioLoader;
 import ghostsimulator.view.Editor;
 import ghostsimulator.view.GhostSimulatorFrame;
 import ghostsimulator.view.MenuBar;
@@ -81,6 +87,14 @@ public class GhostManager {
 	
 	public TerritoryManager getTerritoryManager() {
 		return this.terrManager;
+	}
+
+	public static void playErrorSound() {
+		try {
+			AudioStream audioStream = AudioLoader.getSound("error.wav");
+			AudioPlayer.player.start(audioStream);
+		} catch (Exception exc) {
+		}
 	}
 	
 }

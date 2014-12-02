@@ -1,4 +1,9 @@
 void main() {
-	vor();
-	vor();
+    test();
+    test();
+}
+
+public void test() {
+    moveForward();
+    moveForward();
 }

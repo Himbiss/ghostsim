@@ -193,10 +193,4 @@ public class BooHoo extends Observable {
 		setChanged();
 		notifyObservers();
 	}
-	
-	@Override
-	public String toString() {
-		return "BooHoo("+position.x+"|"+position.y+")";
-	}
-
 }
