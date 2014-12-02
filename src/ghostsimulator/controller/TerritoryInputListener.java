@@ -6,6 +6,9 @@ import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.NoSpaceOnTileException;
 import ghostsimulator.model.Tile;
 import ghostsimulator.model.Tile.Wall;
+import ghostsimulator.util.Invisible;
+import ghostsimulator.view.MethodMenuItem;
+import ghostsimulator.view.MethodPopupMenu;
 
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -13,7 +16,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 /**
@@ -131,7 +137,15 @@ public class TerritoryInputListener implements MouseListener, MouseMotionListene
 					break;
 				}
 			} else {
-				doDelete(tile);
+				if(tile.hasBooHoo()) {
+					// show popup menu
+					MethodPopupMenu menu = new MethodPopupMenu(manager.getTerritory().getBoohoo());
+					menu.setLocation(e.getLocationOnScreen());
+					menu.show(manager.getTerritoryPanel(), e.getX(), e.getY());
+					return;
+				} else {
+					doDelete(tile);
+				}
 			}
 		}
 		manager.getTerritoryPanel().repaint();
