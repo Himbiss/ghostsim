@@ -1,6 +1,7 @@
 void main() {
-    test();
-    test();
+    while(true) {
+	turnLeft();
+    }
 }
 
 public void test() {

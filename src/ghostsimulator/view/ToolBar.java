@@ -1,6 +1,8 @@
 package ghostsimulator.view;
 
 import ghostsimulator.GhostManager;
+import ghostsimulator.controller.SliderListener;
+import ghostsimulator.model.Simulation;
 import ghostsimulator.util.ImageLoader;
 
 import java.awt.Dimension;
@@ -14,11 +16,10 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 
-
 public class ToolBar extends JToolBar {
 
-	private static Dimension DIM_SLIDER_HORIZONTAL = new Dimension(250,50);
-	private static Dimension DIM_SLIDER_VERTICAL = new Dimension(50,250);
+	private static Dimension DIM_SLIDER_HORIZONTAL = new Dimension(250, 50);
+	private static Dimension DIM_SLIDER_VERTICAL = new Dimension(50, 250);
 	private JSlider speedSlider;
 	private GhostManager manager;
 	private ButtonGroup territoryGroup;
@@ -26,12 +27,18 @@ public class ToolBar extends JToolBar {
 	private JToggleButton btnTerritoryWhiteWall;
 	private JToggleButton btnTerritoryRedWall;
 	private JToggleButton btnTerritoryDelete;
-	
+	private JButton btnSimStart;
+	private JButton btnSimPause;
+	private JButton btnSimStop;
+	private Simulation t;
+
 	public ButtonGroup getTerritoryGroup() {
 		return territoryGroup;
 	}
 
-	public enum TerritoryAction {DELETE, ADD_FIREBALL, ADD_WHITEWALL, ADD_REDWALL};
+	public enum TerritoryAction {
+		DELETE, ADD_FIREBALL, ADD_WHITEWALL, ADD_REDWALL
+	};
 
 	public ToolBar(final GhostManager manager) {
 		super("Toolbar", SwingConstants.HORIZONTAL);
@@ -70,22 +77,59 @@ public class ToolBar extends JToolBar {
 		territoryGroup.add(btnTerritoryWhiteWall);
 		territoryGroup.add(btnTerritoryRedWall);
 		territoryGroup.add(btnTerritoryFireball);
-
-		JButton btnSimStart = new JButton(ImageLoader.getImageIcon("Run24.gif"));
+		
+		btnSimStart = new JButton(ImageLoader.getImageIcon("Run24.gif"));
 		btnSimStart.setToolTipText("Start the simulation");
-		JButton btnSimPause = new JButton(ImageLoader.getImageIcon("icon-pause-24.png"));
+		btnSimStart.setEnabled(true);
+		btnSimStart.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+					if(t != null && t.getState() == Thread.State.WAITING) {
+						t.unpause();
+						btnSimPause.setEnabled(true);
+						btnSimStart.setEnabled(false);
+						manager.getInfoLabel().setText("Simulation wieder gestartet");
+					} else {
+						manager.getInfoLabel().setText("Neue Simulation gestartet!");
+						t = new Simulation(manager);
+						t.start();
+					}
+			}
+		});
+		btnSimPause = new JButton(ImageLoader.getImageIcon("icon-pause-24.png"));
 		btnSimPause.setToolTipText("Pause the simulation");
-		JButton btnSimStop = new JButton(ImageLoader.getImageIcon("Stop24.gif"));
+		btnSimPause.setEnabled(false);
+		btnSimPause.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+					t.pause();
+					btnSimPause.setEnabled(false);
+					btnSimStart.setEnabled(true);
+			}
+		});
+		btnSimStop = new JButton(ImageLoader.getImageIcon("Stop24.gif"));
 		btnSimStop.setToolTipText("Stop the simulation");
+		btnSimStop.setEnabled(false);
+		btnSimStop.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				t.interrupt();
+			}
+		});
 
 		speedSlider = new JSlider(SwingConstants.HORIZONTAL);
 		speedSlider.setToolTipText("Change the speed of the simulation");
 		speedSlider.setMaximumSize(DIM_SLIDER_HORIZONTAL);
 		speedSlider.setMinimum(0);
-		speedSlider.setMaximum(20);
-		speedSlider.setMajorTickSpacing(5);
+		speedSlider.setMaximum(1500);
+		speedSlider.setMajorTickSpacing(500);
 		speedSlider.setPaintLabels(true);
 		speedSlider.setPaintTicks(true);
+		speedSlider.addChangeListener(new SliderListener());
+		speedSlider.setValue(250);
 
 		// add components
 		add(btnSave);
@@ -97,8 +141,8 @@ public class ToolBar extends JToolBar {
 		add(btnTerritoryRedWall);
 		addSeparator();
 		add(btnSimStart);
-		add(btnSimStop);
 		add(btnSimPause);
+		add(btnSimStop);
 		addSeparator();
 		add(speedSlider);
 		
@@ -108,9 +152,9 @@ public class ToolBar extends JToolBar {
 	@Override
 	public void setOrientation(int o) {
 		// set the orientation of the speed slider manually
-		if(speedSlider != null) {
+		if (speedSlider != null) {
 			speedSlider.setOrientation(o);
-			if(o == HORIZONTAL) {
+			if (o == HORIZONTAL) {
 				speedSlider.setMaximumSize(DIM_SLIDER_HORIZONTAL);
 				speedSlider.setPaintTicks(true);
 			} else {
@@ -120,17 +164,28 @@ public class ToolBar extends JToolBar {
 		}
 		super.setOrientation(o);
 	}
-	
-	
+
 	public TerritoryAction getSelectedTerritoryAction() {
-		if(btnTerritoryWhiteWall.isSelected())
+		if (btnTerritoryWhiteWall.isSelected())
 			return TerritoryAction.ADD_WHITEWALL;
-		else if(btnTerritoryFireball.isSelected())
+		else if (btnTerritoryFireball.isSelected())
 			return TerritoryAction.ADD_FIREBALL;
-		else if(btnTerritoryRedWall.isSelected())
+		else if (btnTerritoryRedWall.isSelected())
 			return TerritoryAction.ADD_REDWALL;
 		else
 			return TerritoryAction.DELETE;
 	}
-	
+
+	public JButton getBtnSimStart() {
+		return btnSimStart;
+	}
+
+	public JButton getBtnSimPause() {
+		return btnSimPause;
+	}
+
+	public JButton getBtnSimStop() {
+		return btnSimStop;
+	}
+
 }
