@@ -2,6 +2,7 @@ package ghostsimulator.controller;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.model.BooHoo;
+import ghostsimulator.util.Resources;
 import ghostsimulator.view.CompilationResultPanel;
 
 import java.io.BufferedReader;
@@ -135,13 +136,13 @@ public class EditorManager {
 		if(result == 1) {
 			JOptionPane.showConfirmDialog(null,
 					resultPanel,
-					"Error during Compilation!",
+					Resources.getValue("info.compilation.error"),
 					JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.PLAIN_MESSAGE);
 		} else {
 			JOptionPane.showConfirmDialog(null,
-					"The compilation succeeded! :]",
-	                "Compilation Succeeded!",
+					Resources.getValue("info.compilation.success"),
+					Resources.getValue("info.compilation.success"),
 	                JOptionPane.OK_CANCEL_OPTION,
 	                JOptionPane.PLAIN_MESSAGE);
 		}

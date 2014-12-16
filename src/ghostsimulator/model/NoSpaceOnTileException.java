@@ -1,11 +1,14 @@
 package ghostsimulator.model;
 
+import java.util.ResourceBundle;
+
 import ghostsimulator.GhostSimulator;
+import ghostsimulator.util.Resources;
 
 public class NoSpaceOnTileException extends RuntimeException {
 	
 	public NoSpaceOnTileException(Tile tile) {
-		super("Cannot put object down on this tile because there is no space left! "+(GhostSimulator.DEBUG_MODE ? tile : ""));
+		super(Resources.getValue("err.nospace")+(GhostSimulator.DEBUG_MODE ? tile : ""));
 	}
 
 }

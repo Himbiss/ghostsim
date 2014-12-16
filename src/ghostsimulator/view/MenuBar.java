@@ -1,6 +1,7 @@
 package ghostsimulator.view;
 import ghostsimulator.GhostManager;
 import ghostsimulator.util.ImageLoader;
+import ghostsimulator.util.Resources;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -19,22 +20,22 @@ public class MenuBar extends JMenuBar {
 	public MenuBar(GhostManager manager) {
 		this.manager = manager;
 		// create and add menus
-		JMenu editorMenu = new JMenu("Editor");
-		JMenu territoryMenu = new JMenu("Territorium");
-		JMenu simulationMenu = new JMenu("Simulation");
+		JMenu editorMenu = new JMenu(Resources.getValue("menu.editor.txt"));
+		JMenu territoryMenu = new JMenu(Resources.getValue("menu.territory.txt"));
+		JMenu simulationMenu = new JMenu(Resources.getValue("menu.simulation.txt"));
 		add(editorMenu);
 		add(territoryMenu);
 		add(simulationMenu);
 		
 		// set mnemonics for menus
-		editorMenu.setMnemonic(KeyEvent.VK_E);
-		territoryMenu.setMnemonic(KeyEvent.VK_T);
-		simulationMenu.setMnemonic(KeyEvent.VK_S);
+		editorMenu.setMnemonic(Resources.getMnemonic("menu.editor.txt"));
+		territoryMenu.setMnemonic(Resources.getMnemonic("menu.territory.txt"));
+		simulationMenu.setMnemonic(Resources.getMnemonic("menu.simulation.txt"));
 		
 		// create menu items for editor menu
-		JMenuItem saveItem = new JMenuItem("Speichern");
-		JMenuItem compileItem = new JMenuItem("Compilieren");
-		JMenuItem exitItem = new JMenuItem("Beenden");
+		JMenuItem saveItem = new JMenuItem(Resources.getValue("menu.editor.item.save"));
+		JMenuItem compileItem = new JMenuItem(Resources.getValue("menu.editor.item.compile"));
+		JMenuItem exitItem = new JMenuItem(Resources.getValue("menu.editor.item.exit"));
 		exitItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -47,48 +48,48 @@ public class MenuBar extends JMenuBar {
 		editorMenu.add(exitItem);
 		
 		// set mnemonics and accelerators for editor menu items
-		saveItem.setMnemonic(KeyEvent.VK_S);
+		saveItem.setMnemonic(Resources.getMnemonic("menu.editor.item.save.mnemonic"));
 		saveItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-		compileItem.setMnemonic(KeyEvent.VK_C);
+		compileItem.setMnemonic(Resources.getMnemonic("menu.editor.item.compile.mnemonic"));
 		compileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
-		exitItem.setMnemonic(KeyEvent.VK_B);
+		exitItem.setMnemonic(Resources.getMnemonic("menu.editor.item.exit.mnemonic"));
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		
 		// create and add menu items for territory menu
-		JMenuItem saveTerritoryItem = new JMenuItem("Speichern");
-		JMenuItem loadTerritoryItem = new JMenuItem("Laden");
-		JMenuItem serializeTerritoryItem = new JMenuItem("Serialisieren");
-		JMenuItem deserializeTerritoryItem = new JMenuItem("Deserialisieren");
+		JMenuItem saveTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.save"));
+		JMenuItem loadTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.load"));
+		JMenuItem serializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.serialize"));
+		JMenuItem deserializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.deserialize"));
 		territoryMenu.add(saveTerritoryItem);
 		territoryMenu.add(loadTerritoryItem);
 		territoryMenu.add(serializeTerritoryItem);
 		territoryMenu.add(deserializeTerritoryItem);
 		
 		// set mnemonics and accelerators for territory menu items
-		saveTerritoryItem.setMnemonic(KeyEvent.VK_S);
+		saveTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.save.mnemonic"));
 		saveTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
-		loadTerritoryItem.setMnemonic(KeyEvent.VK_L);
+		loadTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.load.mnemonic"));
 		loadTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK));
-		serializeTerritoryItem.setMnemonic(KeyEvent.VK_E);
+		serializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.serialize.mnemonic"));
 		serializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
-		deserializeTerritoryItem.setMnemonic(KeyEvent.VK_D);
+		deserializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.deserialize.mnemonic"));
 		deserializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
 		
 		
 		// create and add menu items for simulation menu
-		JMenuItem startSimulationItem = new JMenuItem("Start");
-		JMenuItem pauseSimulationItem = new JMenuItem("Pausieren");
-		JMenuItem stopSimulationItem = new JMenuItem("Stopp");
+		JMenuItem startSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.start"));
+		JMenuItem pauseSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.pause"));
+		JMenuItem stopSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.stop"));
 		simulationMenu.add(startSimulationItem);
 		simulationMenu.add(pauseSimulationItem);
 		simulationMenu.add(stopSimulationItem);
 		
 		// set mnemonics and accelerators for simulation menu items
-		startSimulationItem.setMnemonic(KeyEvent.VK_S);
+		startSimulationItem.setMnemonic(Resources.getMnemonic("menu.simulation.item.start.mnemonic"));
 		startSimulationItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
-		pauseSimulationItem.setMnemonic(KeyEvent.VK_P);
+		pauseSimulationItem.setMnemonic(Resources.getMnemonic("menu.simulation.item.pause.mnemonic"));
 		pauseSimulationItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
-		stopSimulationItem.setMnemonic(KeyEvent.VK_T);
+		stopSimulationItem.setMnemonic(Resources.getMnemonic("menu.simulation.item.stop.mnemonic"));
 		stopSimulationItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
 		
 		Cursor c = ImageLoader.getCursor("cursor.png");

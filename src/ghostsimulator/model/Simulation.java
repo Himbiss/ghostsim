@@ -2,11 +2,13 @@ package ghostsimulator.model;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.controller.SliderListener;
+import ghostsimulator.util.Resources;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 
 public class Simulation extends Thread implements Observer {
 
@@ -29,7 +31,7 @@ public class Simulation extends Thread implements Observer {
 			manager.getToolbar().getBtnSimPause().setEnabled(false);
 			manager.getToolbar().getBtnSimStart().setEnabled(true);
 			manager.getToolbar().getBtnSimStop().setEnabled(true);
-			manager.getInfoLabel().setText("Simulation pausiert");
+			manager.getInfoLabel().setText(Resources.getValue("info.sim.pause"));
             wait();
         }
 	}
@@ -54,7 +56,7 @@ public class Simulation extends Thread implements Observer {
 			Method method = boo.getClass().getMethod("main", noparams);
 			method.invoke(boo);
 		} catch (NoSuchMethodException e) {
-			manager.getInfoLabel().setText("Keine main-Methode gefunden, vielleicht neu compilieren?");
+			manager.getInfoLabel().setText(Resources.getValue("err.nomainmethod"));
 		} catch (SecurityException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -62,13 +64,12 @@ public class Simulation extends Thread implements Observer {
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		}catch (InvocationTargetException e) {
-			manager.getInfoLabel().setText("Simulation gestoppt!");
+			manager.getInfoLabel().setText(Resources.getValue("info.sim.stop"));
 		}
 		boo.deleteObserver(this);
 		manager.getToolbar().getBtnSimPause().setEnabled(false);
 		manager.getToolbar().getBtnSimStart().setEnabled(true);
 		manager.getToolbar().getBtnSimStop().setEnabled(false);
-		System.out.println("Simulation Ended");
 	}
 
 	@Override

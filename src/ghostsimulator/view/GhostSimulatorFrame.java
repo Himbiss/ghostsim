@@ -4,6 +4,7 @@ import ghostsimulator.GhostManager;
 import ghostsimulator.controller.EditorManager;
 import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
+import ghostsimulator.util.Resources;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -30,7 +31,7 @@ public class GhostSimulatorFrame extends JFrame {
 		// setup frame
 		setSize(1000, 800);
 		setLayout(new BorderLayout()); 
-		setTitle("Ghost Simulator");
+		setTitle(Resources.getValue("title"));
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setVisible(true);
 		
@@ -59,7 +60,7 @@ public class GhostSimulatorFrame extends JFrame {
 		
 		// create and add info panel
 		JPanel infoPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-		infoLabel = new JLabel("Welcome!");
+		infoLabel = new JLabel(Resources.getValue("welcome.message"));
 		infoPanel.add(infoLabel);
 		add(infoPanel, BorderLayout.SOUTH);
 		

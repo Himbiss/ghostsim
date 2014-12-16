@@ -12,7 +12,6 @@ import javax.swing.JPopupMenu;
 public class MethodPopupMenu extends JPopupMenu {
 	
 	public MethodPopupMenu(GhostManager manager) {
-		super("Methoden");
 		BooHoo boohoo = manager.getTerritory().getBoohoo();
 		for(Method m :boohoo.getClass().getDeclaredMethods()) {
 			int modifiers = m.getModifiers();

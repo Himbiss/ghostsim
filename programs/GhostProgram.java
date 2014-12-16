@@ -1,6 +1,13 @@
 void main() {
     while(true) {
-	turnLeft();
+        if(fireballOnTile()) {
+            takeFireball();
+        }
+        if(!wallInFront()) {
+            moveForward();
+        } else {
+            turnLeft();
+        }
     }
 }
 

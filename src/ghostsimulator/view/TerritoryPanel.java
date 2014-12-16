@@ -8,6 +8,7 @@ import ghostsimulator.model.NoSpaceOnTileException;
 import ghostsimulator.model.Territory;
 import ghostsimulator.model.Tile;
 import ghostsimulator.util.ImageLoader;
+import ghostsimulator.util.Resources;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -24,6 +25,7 @@ import java.awt.event.MouseListener;
 import java.beans.Transient;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -202,13 +204,13 @@ public class TerritoryPanel extends JPanel implements Observer {
 	private void drawStats(Graphics2D g2d) {
 		g2d.setColor(Color.BLACK);
 		g2d.setFont(statusFont);
-		String str = "Fireballs: ";
+		String str = Resources.getValue("fireballs") + ": ";
 		FontMetrics metrics = g2d.getFontMetrics(statusFont);
 		int startX = offsetX;
 		int startY = offsetY - metrics.getHeight() - 5;
 		int stringWidth = metrics.stringWidth(str);
 		int fireballWidth = fireballImage.getWidth(this);
-		g2d.drawString("Fireballs:", startX, startY);
+		g2d.drawString(str, startX, startY);
 		for (int x = startX + stringWidth; x < manager.getTerritory()
 				.getBoohooNumFireballs() * fireballWidth + startX + stringWidth; x += fireballWidth) {
 			g2d.drawImage(fireballImage, x, startY - metrics.getHeight(), this);

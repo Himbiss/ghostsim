@@ -1,9 +1,11 @@
 package ghostsimulator.model;
 
+import ghostsimulator.util.Resources;
+
 public class HasNoFireballException extends RuntimeException {
 
 	public HasNoFireballException() {
-		super("Cannot shoot fireball because I have none!");
+		super(Resources.getValue("err.nofireballs"));
 	}
 
 }

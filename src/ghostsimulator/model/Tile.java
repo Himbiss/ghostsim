@@ -1,5 +1,9 @@
 package ghostsimulator.model;
 
+import ghostsimulator.util.Resources;
+
+import java.util.ResourceBundle;
+
 
 /**
  * Represents a Tile with a size and a number of attributes. 
@@ -122,6 +126,6 @@ public class Tile {
 	
 	@Override
 	public String toString() {
-		return "Tile("+columnIndex+"|"+rowIndex+"): Wall:"+wall+" Fireballs:"+numFireballs+" BooHoo:"+(boohoo!=null);
+		return Resources.getValue("tile")+"("+columnIndex+"|"+rowIndex+"): "+Resources.getValue("wall")+":"+wall+" "+Resources.getValue("fireballs")+":"+numFireballs+" BooHoo:"+(boohoo!=null);
 	}
 }

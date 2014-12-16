@@ -4,6 +4,7 @@ import ghostsimulator.GhostManager;
 import ghostsimulator.controller.SliderListener;
 import ghostsimulator.model.Simulation;
 import ghostsimulator.util.ImageLoader;
+import ghostsimulator.util.Resources;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -45,7 +46,7 @@ public class ToolBar extends JToolBar {
 		this.manager = manager;
 
 		JButton btnSave = new JButton(ImageLoader.getImageIcon("gnome-dev-floppy.png"));
-		btnSave.setToolTipText("Save");
+		btnSave.setToolTipText(Resources.getValue("btn.save.txt"));
 		btnSave.addActionListener(new ActionListener() {
 			
 			@Override
@@ -54,7 +55,7 @@ public class ToolBar extends JToolBar {
 			}
 		});
 		JButton btnCompile = new JButton(ImageLoader.getImageIcon("Compile24.gif"));
-		btnCompile.setToolTipText("Compile");
+		btnCompile.setToolTipText(Resources.getValue("btn.compile.txt"));
 		btnCompile.addActionListener(new ActionListener() {
 			
 			@Override
@@ -64,13 +65,13 @@ public class ToolBar extends JToolBar {
 		});
 
 		btnTerritoryFireball = new JToggleButton(ImageLoader.getImageIcon("fireball.png"));
-		btnTerritoryFireball.setToolTipText("Add a fireball to the territory");
+		btnTerritoryFireball.setToolTipText(Resources.getValue("btn.fireball.txt"));
 		btnTerritoryWhiteWall = new JToggleButton(ImageLoader.getScaledImageIcon("white_wall.png", 28, 24),true);
-		btnTerritoryWhiteWall.setToolTipText("Add a steel wall to the territory");
+		btnTerritoryWhiteWall.setToolTipText(Resources.getValue("btn.whitewall.txt"));
 		btnTerritoryRedWall = new JToggleButton(ImageLoader.getScaledImageIcon("red_wall.png", 28, 24));
-		btnTerritoryRedWall.setToolTipText("Add a brick wall to the territory");
+		btnTerritoryRedWall.setToolTipText(Resources.getValue("btn.redwall.txt"));
 		btnTerritoryDelete = new JToggleButton(ImageLoader.getImageIcon("Delete24.gif"));
-		btnTerritoryDelete.setToolTipText("Delete something from the territory");
+		btnTerritoryDelete.setToolTipText(Resources.getValue("btn.deleteTerritory.txt"));
 		
 		territoryGroup = new ButtonGroup();
 		territoryGroup.add(btnTerritoryDelete);
@@ -79,7 +80,7 @@ public class ToolBar extends JToolBar {
 		territoryGroup.add(btnTerritoryFireball);
 		
 		btnSimStart = new JButton(ImageLoader.getImageIcon("Run24.gif"));
-		btnSimStart.setToolTipText("Start the simulation");
+		btnSimStart.setToolTipText(Resources.getValue("btn.simStart.txt"));
 		btnSimStart.setEnabled(true);
 		btnSimStart.addActionListener(new ActionListener() {
 			
@@ -89,16 +90,16 @@ public class ToolBar extends JToolBar {
 						t.unpause();
 						btnSimPause.setEnabled(true);
 						btnSimStart.setEnabled(false);
-						manager.getInfoLabel().setText("Simulation wieder gestartet");
+						manager.getInfoLabel().setText(Resources.getValue("info.sim.restart"));
 					} else {
-						manager.getInfoLabel().setText("Neue Simulation gestartet!");
+						manager.getInfoLabel().setText(Resources.getValue("info.sim.start"));
 						t = new Simulation(manager);
 						t.start();
 					}
 			}
 		});
 		btnSimPause = new JButton(ImageLoader.getImageIcon("icon-pause-24.png"));
-		btnSimPause.setToolTipText("Pause the simulation");
+		btnSimPause.setToolTipText(Resources.getValue("btn.simPause.txt"));
 		btnSimPause.setEnabled(false);
 		btnSimPause.addActionListener(new ActionListener() {
 			
@@ -110,7 +111,7 @@ public class ToolBar extends JToolBar {
 			}
 		});
 		btnSimStop = new JButton(ImageLoader.getImageIcon("Stop24.gif"));
-		btnSimStop.setToolTipText("Stop the simulation");
+		btnSimStop.setToolTipText(Resources.getValue("btn.simStop.txt"));
 		btnSimStop.setEnabled(false);
 		btnSimStop.addActionListener(new ActionListener() {
 			
@@ -121,7 +122,7 @@ public class ToolBar extends JToolBar {
 		});
 
 		speedSlider = new JSlider(SwingConstants.HORIZONTAL);
-		speedSlider.setToolTipText("Change the speed of the simulation");
+		speedSlider.setToolTipText(Resources.getValue("btn.speedSlider.txt"));
 		speedSlider.setMaximumSize(DIM_SLIDER_HORIZONTAL);
 		speedSlider.setMinimum(0);
 		speedSlider.setMaximum(1500);
