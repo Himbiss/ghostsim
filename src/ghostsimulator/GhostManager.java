@@ -8,6 +8,7 @@ import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import ghostsimulator.controller.EditorManager;
+import ghostsimulator.controller.SerializationController;
 import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
 import ghostsimulator.util.AudioLoader;
@@ -32,6 +33,7 @@ public class GhostManager {
 	private JLabel infoLabel;
 	private EditorManager editorManager;
 	private TerritoryManager terrManager ;
+	private SerializationController serializationController;
 	
 	public EditorManager getEditorManager() {
 		return editorManager;
@@ -95,6 +97,12 @@ public class GhostManager {
 			AudioPlayer.player.start(audioStream);
 		} catch (Exception exc) {
 		}
+	}
+	public SerializationController getSerializationController() {
+		return serializationController;
+	}
+	public void setSerializationController(SerializationController serializationController) {
+		this.serializationController = serializationController;
 	}
 	
 }

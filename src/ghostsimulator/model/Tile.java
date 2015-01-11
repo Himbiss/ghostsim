@@ -2,7 +2,7 @@ package ghostsimulator.model;
 
 import ghostsimulator.util.Resources;
 
-import java.util.ResourceBundle;
+import java.io.Serializable;
 
 
 /**
@@ -11,14 +11,16 @@ import java.util.ResourceBundle;
  * @author Vincent Ortland
  *
  */
-public class Tile {
+public class Tile implements Serializable {
+
+	private static final long serialVersionUID = 4767556145604905332L;
 
 	public enum Wall { NO_WALL, RED_WALL, WHITE_WALL };
 	private int space;
 	private int columnIndex, rowIndex;
 	private int numFireballs;
 	private Wall wall;
-	private BooHoo boohoo;
+	private transient BooHoo boohoo;
 	
 	/**
 	 * Creates this tile with a x-index and a y-index

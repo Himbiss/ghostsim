@@ -16,6 +16,8 @@ import javax.swing.KeyStroke;
 public class MenuBar extends JMenuBar {
 	
 	private GhostManager manager;
+	public JMenuItem serializeTerritoryItem;
+	public JMenuItem deserializeTerritoryItem;
 
 	public MenuBar(GhostManager manager) {
 		this.manager = manager;
@@ -58,8 +60,8 @@ public class MenuBar extends JMenuBar {
 		// create and add menu items for territory menu
 		JMenuItem saveTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.save"));
 		JMenuItem loadTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.load"));
-		JMenuItem serializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.serialize"));
-		JMenuItem deserializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.deserialize"));
+		serializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.serialize"));
+		deserializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.deserialize"));
 		territoryMenu.add(saveTerritoryItem);
 		territoryMenu.add(loadTerritoryItem);
 		territoryMenu.add(serializeTerritoryItem);
@@ -71,8 +73,10 @@ public class MenuBar extends JMenuBar {
 		loadTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.load.mnemonic"));
 		loadTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK));
 		serializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.serialize.mnemonic"));
+		serializeTerritoryItem.addActionListener(manager.getSerializationController());
 		serializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
 		deserializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.deserialize.mnemonic"));
+		deserializeTerritoryItem.addActionListener(manager.getSerializationController());
 		deserializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
 		
 		

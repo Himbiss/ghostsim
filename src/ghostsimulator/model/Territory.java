@@ -4,6 +4,7 @@ import ghostsimulator.model.BooHoo.Direction;
 import ghostsimulator.model.Tile.Wall;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.Observable;
 
 
@@ -14,13 +15,16 @@ import java.util.Observable;
  * @author Vincent Ortland
  * 
  */
-public class Territory extends Observable {
+public class Territory extends Observable implements Serializable {
 
+	private static final long serialVersionUID = 5409901105513046657L;
+	
 	public static final int DEFAULT_COLUMN_CNT = 10;
 	public static final int DEFAULT_ROW_CNT = 10;
 
 	private Tile[][] territory;
-	private BooHoo boohoo;
+	private transient BooHoo boohoo;
+
 
 	private int columnCount, rowCount;
 
@@ -166,5 +170,10 @@ public class Territory extends Observable {
 		boohoo.setPosition(point);
 		setChanged();
 		notifyObservers();
+	}
+
+	public void setBoohoo(BooHoo boohoo) {
+		this.boohoo = boohoo;
+		boohoo.setTerritory(this);
 	}
 }

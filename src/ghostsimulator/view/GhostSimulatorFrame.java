@@ -2,6 +2,7 @@ package ghostsimulator.view;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.controller.EditorManager;
+import ghostsimulator.controller.SerializationController;
 import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
 import ghostsimulator.util.Resources;

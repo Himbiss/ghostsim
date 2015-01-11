@@ -34,7 +34,6 @@ public class TerritoryPanel extends JPanel implements Observer {
 
 	public static int TILE_SIZE = 51;
 
-	private Tile[][] tiles;
 	private int columnCount;
 	private int rowCount;
 	private int offsetX, offsetY = TILE_SIZE;
@@ -58,8 +57,6 @@ public class TerritoryPanel extends JPanel implements Observer {
 		addMouseListener(territoryListener);
 		addMouseMotionListener(territoryListener);
 		addKeyListener(territoryListener);
-		// instantiate objects
-		tiles = manager.getTerritory().getTerritory();
 		columnCount = manager.getTerritory().getColumnCount();
 		rowCount = manager.getTerritory().getRowCount();
 		statusFont = new Font("Arial", Font.BOLD, 12);
@@ -97,7 +94,7 @@ public class TerritoryPanel extends JPanel implements Observer {
 		int cntRow = (pos.y - offsetY) / TILE_SIZE;
 		if (cntColumn < columnCount && cntRow < rowCount && cntColumn >= 0
 				&& cntRow >= 0)
-			return tiles[cntColumn][cntRow];
+			return manager.getTerritory().getTerritory()[cntColumn][cntRow];
 		return null;
 	}
 
@@ -146,7 +143,7 @@ public class TerritoryPanel extends JPanel implements Observer {
 			// iterate through the tiles and draw them
 			for (int row = 0; row < rowCount; row++) {
 				for (int column = 0; column < columnCount; column++) {
-					Tile tile = tiles[column][row];
+					Tile tile = manager.getTerritory().getTerritory()[column][row];
 					drawTile(tile, g2d);
 				}
 			}

@@ -73,6 +73,17 @@ public class EditorManager {
 	 */
 	public void saveEditor() {
 		if (file != null) {
+			if(!file.exists())
+				try {
+					if(file.createNewFile()) {
+						System.err.println("Created new file: "+file.getAbsolutePath());
+					} else {
+						System.err.println("Error creating file: "+file.getAbsolutePath());
+					}
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			
 			try (BufferedWriter writer = new BufferedWriter(
 					new FileWriter(file))) {
 				writer.write(manager.getEditor().getText());
@@ -91,14 +102,19 @@ public class EditorManager {
 		File file = new File(DIRECTORY + "/" + PROGRAM_NAME + ".java");
 		// if the file does not exist, fill it with default content
 		if (!file.exists()) {
-			try (BufferedWriter writer = new BufferedWriter(
-					new FileWriter(file))) {
-				writer.write("void main() {\n");
-				writer.newLine();
-				writer.newLine();
-				writer.write("}");
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(file.canWrite()) {
+				try (BufferedWriter writer = new BufferedWriter(
+						new FileWriter(file))) {
+					writer.write("void main() {\n");
+					writer.newLine();
+					writer.newLine();
+					writer.write("}");
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				System.err.println("Cannot write to file!");
+				return;
 			}
 		}
 		// load the editor with the content
