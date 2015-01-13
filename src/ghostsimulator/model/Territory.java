@@ -179,6 +179,10 @@ public class Territory extends Observable implements Serializable {
 		return boohoo.getNumFireballs();
 	}
 
+	public void setBoohooNumFireballs(int fireballs) {
+		boohoo.setNumFireballs(fireballs);
+	}
+	
 	public int getColumnCount() {
 		return columnCount;
 	}

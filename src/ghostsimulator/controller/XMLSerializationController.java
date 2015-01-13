@@ -11,18 +11,31 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
 
 import javax.swing.JFileChooser;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import javax.xml.stream.events.EndElement;
+import javax.xml.stream.events.StartElement;
+import javax.xml.stream.events.XMLEvent;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -130,6 +143,7 @@ public class XMLSerializationController implements ActionListener {
 					String.valueOf(territory.getBoohooPosition().y));
 			writer.writeAttribute(DIRECTION, territory.getBoohooDirection()
 					.name());
+			writer.writeAttribute(FIREBALLS, String.valueOf(territory.getBoohooNumFireballs()));
 			writer.writeEndElement();
 
 			// write the territory
@@ -182,7 +196,7 @@ public class XMLSerializationController implements ActionListener {
 
 				private Tile tile;
 				private Territory territory;
-				private int boohoo_col, boohoo_row;
+				private int boohoo_col, boohoo_row, boohoo_fireballs;
 				private Direction boohoo_dir;
 				
 				public void startElement(String uri, String localName,
@@ -209,6 +223,7 @@ public class XMLSerializationController implements ActionListener {
 					
 					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
 						boohoo_col = Integer.valueOf(attributes.getValue(COLUMN));
+						boohoo_fireballs = Integer.valueOf(attributes.getValue(FIREBALLS));
 						boohoo_row = Integer.valueOf(attributes.getValue(ROW));
 						boohoo_dir = Direction.valueOf(attributes.getValue(DIRECTION));
 					}
@@ -228,6 +243,7 @@ public class XMLSerializationController implements ActionListener {
 					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
 						BooHoo boo = manager.getTerritory().getBoohoo();
 						territory.setBoohoo(boo);
+						territory.setBoohooNumFireballs(boohoo_fireballs);
 						territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
 						territory.setBooHooDirection(boohoo_dir);
 					}
@@ -263,7 +279,7 @@ public class XMLSerializationController implements ActionListener {
 	 */
 	private void loadWithDOM(File file) {
 		Territory territory = null;
-		int boohoo_col, boohoo_row;
+		int boohoo_col, boohoo_row, boohoo_fireballs;
 		Direction boohoo_dir;
 		
 		try {
@@ -302,6 +318,7 @@ public class XMLSerializationController implements ActionListener {
 					Element elem = (Element) booHooStateNodeList.item(0);
 					boohoo_col = Integer.parseInt(elem.getAttribute(COLUMN));
 					boohoo_row = Integer.parseInt(elem.getAttribute(ROW));
+					boohoo_fireballs = Integer.parseInt(elem.getAttribute(FIREBALLS));
 					boohoo_dir = Direction.valueOf(elem.getAttribute(DIRECTION));
 				}
 				
@@ -319,6 +336,7 @@ public class XMLSerializationController implements ActionListener {
 				// add the boohoo
 				BooHoo boo = manager.getTerritory().getBoohoo();
 				territory.setBoohoo(boo);
+				territory.setBoohooNumFireballs(boohoo_fireballs);
 				territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
 				territory.setBooHooDirection(boohoo_dir);
 
@@ -331,10 +349,8 @@ public class XMLSerializationController implements ActionListener {
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	 
@@ -347,6 +363,104 @@ public class XMLSerializationController implements ActionListener {
 	 */
 	private void loadWithStAXCursor(File file) {
 
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		XMLStreamReader streamReader = null;
+		try(Reader reader = new FileReader(file)) {
+			// create the streamreader. has to be closed manually, because
+			// the autoclose interface is not implemented
+			streamReader = factory.createXMLStreamReader(reader);
+			
+			Territory territory = null;
+			Tile tile = null;
+			Direction boohoo_dir = Direction.EAST;
+			int boohoo_col = 1, boohoo_row = 1, boohoo_fireballs = 0;
+			
+			// go through every event
+			while(streamReader.hasNext()) {
+				// switch by the event type
+				switch (streamReader.getEventType()) {
+				case XMLStreamConstants.START_ELEMENT:
+					String qName = streamReader.getName().getLocalPart();
+					
+					if (qName.equalsIgnoreCase(TERRITORY)) {
+						int columns = Integer.valueOf(streamReader.getAttributeValue(null, WIDTH));
+						int rows = Integer.valueOf(streamReader.getAttributeValue(null, HEIGHT));
+						territory = new Territory(columns, rows);
+					}
+
+					if (qName.equalsIgnoreCase(TILE)) {
+						int col = Integer.valueOf(streamReader.getAttributeValue(null, COLUMN));
+						int row = Integer.valueOf(streamReader.getAttributeValue(null, ROW));
+						int fireballs = Integer.valueOf(streamReader.getAttributeValue(null, FIREBALLS));
+						tile = new Tile(col, row);
+						tile.setFireballs(fireballs);
+					}
+
+					if (qName.equalsIgnoreCase(WALL)) {
+						tile.setWall(Wall.valueOf(streamReader.getAttributeValue(null, WALL_TYPE)));
+					}
+					
+					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
+						boohoo_col = Integer.valueOf(streamReader.getAttributeValue(null, COLUMN));
+						boohoo_row = Integer.valueOf(streamReader.getAttributeValue(null, ROW));
+						boohoo_fireballs = Integer.valueOf(streamReader.getAttributeValue(null, FIREBALLS));
+						boohoo_dir = Direction.valueOf(streamReader.getAttributeValue(null, DIRECTION));
+					}
+					break;
+
+				case XMLStreamConstants.END_ELEMENT:
+					qName = streamReader.getName().toString();
+					
+					if (qName.equalsIgnoreCase(TILE)) {
+						territory.setTile(tile.getColumnIndex(), tile.getRowIndex(), tile);
+					}
+					
+					if (qName.equalsIgnoreCase(TERRITORY)) {
+						changeTerritory(territory);
+					}
+					
+					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
+						BooHoo boo = manager.getTerritory().getBoohoo();
+						territory.setBoohoo(boo);
+						territory.setBoohooNumFireballs(boohoo_fireballs);
+						territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
+						territory.setBooHooDirection(boohoo_dir);
+					}
+					break;
+				case XMLStreamConstants.END_DOCUMENT:
+					streamReader.close();
+					break;
+				default:
+					break;
+				}
+				// get next event
+				streamReader.next();
+			}
+		    
+			// add the boohoo
+			BooHoo boo = manager.getTerritory().getBoohoo();
+			territory.setBoohoo(boo);
+			territory.setBoohooNumFireballs(boohoo_fireballs);
+			territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
+			territory.setBooHooDirection(boohoo_dir);
+
+			// if everything went fine, set the new territory
+			changeTerritory(territory);
+		    
+		} catch (XMLStreamException e) {
+		    e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} finally {
+			// try to close the reader if not already happened
+			try {
+				streamReader.close();
+			} catch (XMLStreamException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	/**
@@ -355,7 +469,93 @@ public class XMLSerializationController implements ActionListener {
 	 * @param file
 	 */
 	private void loadWithStAXIterator(File file) {
+		XMLInputFactory factory = XMLInputFactory.newInstance();
+		XMLEventReader eventReader = null;
+		try(InputStream is = new FileInputStream(file)) {
+			
+			// create the eventreader. has to be closed manually, because
+			// the autoclose interface is not implemented
+			eventReader = factory.createXMLEventReader(is);
+			
+			Territory territory = null;
+			Tile tile = null;
+			Direction boohoo_dir = Direction.EAST;
+			int boohoo_col = 1, boohoo_row = 1, boohoo_fireballs = 0;
+			
+			// go through every event
+			while(eventReader.hasNext()) {
+				XMLEvent event = eventReader.nextEvent();
+				
+				if(event.isStartElement()) {
+					StartElement startElement = event.asStartElement();
+					String qName = startElement.getName().getLocalPart();
+				
+					if (qName.equalsIgnoreCase(TERRITORY)) {
+						int columns = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(WIDTH)).getValue());
+						int rows = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(HEIGHT)).getValue());
+						territory = new Territory(columns, rows);
+					}
+					
+					if (qName.equalsIgnoreCase(TILE)) {
+						int col = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(COLUMN)).getValue());
+						int row = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(ROW)).getValue());
+						int fireballs = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(FIREBALLS)).getValue());
+						tile = new Tile(col, row);
+						tile.setFireballs(fireballs);
+					}
 
+					if (qName.equalsIgnoreCase(WALL)) {
+						tile.setWall(Wall.valueOf(startElement.getAttributeByName(QName.valueOf(WALL_TYPE)).getValue()));
+					}
+					
+					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
+						boohoo_col = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(COLUMN)).getValue());
+						boohoo_row = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(ROW)).getValue());
+						boohoo_fireballs = Integer.valueOf(startElement.getAttributeByName(QName.valueOf(FIREBALLS)).getValue());
+						boohoo_dir = Direction.valueOf(startElement.getAttributeByName(QName.valueOf(DIRECTION)).getValue());
+					}
+					
+				} else if(event.isEndElement()) {
+					EndElement endElement = event.asEndElement();
+					String qName = endElement.getName().getLocalPart();
+					
+					if (qName.equalsIgnoreCase(TILE)) {
+						territory.setTile(tile.getColumnIndex(), tile.getRowIndex(), tile);
+					}
+					
+					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
+						BooHoo boo = manager.getTerritory().getBoohoo();
+						territory.setBoohoo(boo);
+						territory.setBoohooNumFireballs(boohoo_fireballs);
+						territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
+						territory.setBooHooDirection(boohoo_dir);
+					}
+				}
+			}
+		    
+			// add the boohoo
+			BooHoo boo = manager.getTerritory().getBoohoo();
+			territory.setBoohoo(boo);
+			territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
+			territory.setBooHooDirection(boohoo_dir);
+
+			// if everything went fine, set the new territory
+			changeTerritory(territory);
+		    
+		} catch (XMLStreamException e) {
+		    e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} finally {
+			// try to close the reader if not already happened
+			try {
+				eventReader.close();
+			} catch (XMLStreamException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }
