@@ -74,6 +74,10 @@ public class MenuBar extends JMenuBar {
 		subLoadTerritoryDOM = new JMenuItem(Resources.getValue("menu.territory.item.loaddom"));
 		subLoadTerritoryStAXCursor = new JMenuItem(Resources.getValue("menu.territory.item.loadstaxcur"));
 		subLoadTerritoryStAXIterator = new JMenuItem(Resources.getValue("menu.territory.item.loadstaxit"));
+		subLoadTerritorySAX.addActionListener(manager.getXmlSerializationController());
+		subLoadTerritoryDOM.addActionListener(manager.getXmlSerializationController());
+		subLoadTerritoryStAXCursor.addActionListener(manager.getXmlSerializationController());
+		subLoadTerritoryStAXIterator.addActionListener(manager.getXmlSerializationController());
 		
 		subLoadTerritoryMenu.add(subLoadTerritorySAX);
 		subLoadTerritoryMenu.add(subLoadTerritoryDOM);
@@ -87,7 +91,7 @@ public class MenuBar extends JMenuBar {
 				
 		// set mnemonics and accelerators for territory menu items
 		saveTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.save.mnemonic"));
-		saveTerritoryItem.addActionListener(manager.getSerializationController());
+		saveTerritoryItem.addActionListener(manager.getXmlSerializationController());
 		saveTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
 		serializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.serialize.mnemonic"));
 		serializeTerritoryItem.addActionListener(manager.getSerializationController());

@@ -92,6 +92,16 @@ public class Territory extends Observable implements Serializable {
 			return territory[position.x][position.y];
 		return null;
 	}
+	
+	/**
+	 * Returns the tile at (col|row)
+	 * @param col
+	 * @param row
+	 * @return tile
+	 */
+	public Tile getTile(int col, int row) {
+		return territory[col][row];
+	}
 
 	/**
 	 * Animates the shot of a fireball from position 'position' towards 'direction'
