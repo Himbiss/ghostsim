@@ -23,7 +23,7 @@ public class Territory extends Observable implements Serializable {
 	public static final int DEFAULT_ROW_CNT = 10;
 
 	private Tile[][] territory;
-	private transient BooHoo boohoo;
+	private BooHoo boohoo;
 
 
 	private int columnCount, rowCount;

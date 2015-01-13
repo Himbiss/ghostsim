@@ -1,12 +1,5 @@
 package ghostsimulator;
 
-import java.io.FileInputStream;
-
-import javax.swing.JLabel;
-
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
 import ghostsimulator.controller.EditorManager;
 import ghostsimulator.controller.SerializationController;
 import ghostsimulator.controller.TerritoryManager;
@@ -17,6 +10,11 @@ import ghostsimulator.view.GhostSimulatorFrame;
 import ghostsimulator.view.MenuBar;
 import ghostsimulator.view.TerritoryPanel;
 import ghostsimulator.view.ToolBar;
+
+import javax.swing.JLabel;
+
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 /**
  * Manages all instances

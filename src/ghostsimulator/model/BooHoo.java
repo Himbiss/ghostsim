@@ -1,6 +1,7 @@
 package ghostsimulator.model;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.Observable;
 
 
@@ -9,7 +10,9 @@ import java.util.Observable;
  * @author Vincent Ortland
  *
  */
-public class BooHoo extends Observable {
+public class BooHoo extends Observable implements Serializable {
+
+	private static final long serialVersionUID = -2678258386876029301L;
 
 	/**
 	 * The direction in which the boohoo is facing

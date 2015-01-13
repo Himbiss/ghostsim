@@ -49,7 +49,7 @@ public class SerializationController implements ActionListener {
 				// deserialize the territory
 				try (FileInputStream fileIn = new FileInputStream(file);
 						ObjectInputStream in = new ObjectInputStream(fileIn)) {
-					replaceTerritory((Territory) in.readObject());
+						manager.setTerritory((Territory) in.readObject());
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} catch (ClassNotFoundException e2) {
@@ -63,6 +63,5 @@ public class SerializationController implements ActionListener {
 		BooHoo boo = manager.getTerritory().getBoohoo();
 		newTerritory.setBoohoo(boo);
 		newTerritory.setBooHooPosition(new Point(1,1));
-		manager.setTerritory(newTerritory);
 	}
 }

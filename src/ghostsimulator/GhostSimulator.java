@@ -2,14 +2,12 @@ package ghostsimulator;
 
 import ghostsimulator.controller.SerializationController;
 import ghostsimulator.model.Territory;
-import ghostsimulator.view.Editor;
 import ghostsimulator.view.GhostSimulatorFrame;
 
 public class GhostSimulator {
 
 	public static boolean DEBUG_MODE = true;
 	
-	private static Editor editor;
 	private static Territory territory;
 
 	public static void main(String[] args) {
