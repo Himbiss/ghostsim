@@ -50,7 +50,7 @@ public class XMLSerializationController implements ActionListener {
 	private final JFileChooser fc = new JFileChooser();
 
 	// constants for the xml
-	private static final String TERRITORY = "Territory";
+	private static final String TERRITORY = "territory";
 	private static final String WIDTH = "width";
 	private static final String HEIGHT = "height";
 	private static final String TILE = "tile";
@@ -127,6 +127,11 @@ public class XMLSerializationController implements ActionListener {
 
 			// write start document and root node
 			writer.writeStartDocument();
+			
+			// write the dtd
+			writer.writeDTD(getDtd());
+			
+			// write the root tag
 			writer.writeStartElement(TERRITORY);
 
 			// write attributes (width and height)
@@ -190,6 +195,8 @@ public class XMLSerializationController implements ActionListener {
 		try {
 
 			SAXParserFactory factory = SAXParserFactory.newInstance();
+			factory.setValidating(true);
+			
 			SAXParser saxParser = factory.newSAXParser();
 			
 			DefaultHandler handler = new DefaultHandler() {
@@ -284,6 +291,7 @@ public class XMLSerializationController implements ActionListener {
 		
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			dbFactory.setValidating(true);
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(file);
 			doc.getDocumentElement().normalize();
@@ -362,8 +370,9 @@ public class XMLSerializationController implements ActionListener {
 	 * @param file
 	 */
 	private void loadWithStAXCursor(File file) {
-
 		XMLInputFactory factory = XMLInputFactory.newInstance();
+		factory.setProperty(XMLInputFactory.IS_VALIDATING, "true");
+		
 		XMLStreamReader streamReader = null;
 		try(Reader reader = new FileReader(file)) {
 			// create the streamreader. has to be closed manually, because
@@ -470,6 +479,8 @@ public class XMLSerializationController implements ActionListener {
 	 */
 	private void loadWithStAXIterator(File file) {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
+		factory.setProperty(XMLInputFactory.IS_VALIDATING, "true");
+		
 		XMLEventReader eventReader = null;
 		try(InputStream is = new FileInputStream(file)) {
 			
@@ -558,4 +569,40 @@ public class XMLSerializationController implements ActionListener {
 		}
 	}
 
+
+	/**
+	 * Returns the DTD for the Territory XML-Files as a string.
+	 * @return dtd
+	 */
+	private String getDtd() {
+		StringBuilder builder = new StringBuilder();
+		
+		builder.append("<!DOCTYPE "+TERRITORY);
+		builder.append("[");
+		builder.append("<!ELEMENT "+TERRITORY+" ("+BOOHOO_STATE+","+TILE+"+)>");
+		builder.append("<!ELEMENT "+BOOHOO_STATE+" (#PCDATA)>");
+		builder.append("<!ELEMENT "+TILE+" ("+WALL+"?)>");
+		builder.append("<!ELEMENT "+WALL+" (#PCDATA)>");
+		builder.append("<!ATTLIST "+TERRITORY);
+		builder.append("   "+WIDTH+"    CDATA    #REQUIRED");
+		builder.append("   "+HEIGHT+"    CDATA    #REQUIRED");
+		builder.append(">");
+		builder.append("<!ATTLIST "+BOOHOO_STATE);
+		builder.append("   "+COLUMN+"    CDATA    #REQUIRED");
+		builder.append("   "+ROW+"    CDATA    #REQUIRED");
+		builder.append("   "+DIRECTION+"    CDATA    #REQUIRED");
+		builder.append("   "+FIREBALLS+"    CDATA    #REQUIRED");
+		builder.append(">");
+		builder.append("<!ATTLIST "+TILE);
+		builder.append("   "+COLUMN+"    CDATA    #REQUIRED");
+		builder.append("   "+ROW+"    CDATA    #REQUIRED");
+		builder.append("   "+FIREBALLS+"    CDATA    #REQUIRED");
+		builder.append(">");
+		builder.append("<!ATTLIST "+WALL);
+		builder.append("   "+WALL_TYPE+"    CDATA    #REQUIRED");
+		builder.append(">");
+		builder.append("]>");
+		
+		return builder.toString();
+	}
 }
