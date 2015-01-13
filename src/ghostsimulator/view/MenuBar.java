@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 public class MenuBar extends JMenuBar {
@@ -18,6 +19,11 @@ public class MenuBar extends JMenuBar {
 	private GhostManager manager;
 	public JMenuItem serializeTerritoryItem;
 	public JMenuItem deserializeTerritoryItem;
+	public JMenuItem saveTerritoryItem;
+	public JMenuItem subLoadTerritorySAX;
+	public JMenuItem subLoadTerritoryDOM;
+	public JMenuItem subLoadTerritoryStAXCursor;
+	public JMenuItem subLoadTerritoryStAXIterator;
 
 	public MenuBar(GhostManager manager) {
 		this.manager = manager;
@@ -57,28 +63,38 @@ public class MenuBar extends JMenuBar {
 		exitItem.setMnemonic(Resources.getMnemonic("menu.editor.item.exit.mnemonic"));
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		
-		// create and add menu items for territory menu
-		JMenuItem saveTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.save"));
-		JMenuItem loadTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.load"));
+		saveTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.save"));
 		serializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.serialize"));
 		deserializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.deserialize"));
+		
+		// add submenu to territory menu item 'loadTerritoryItem
+		JMenu subLoadTerritoryMenu = new JMenu(Resources.getValue("menu.territory.item.load"));
+		subLoadTerritoryMenu.setMnemonic(Resources.getMnemonic("menu.territory.item.load.mnemonic"));
+		subLoadTerritorySAX = new JMenuItem(Resources.getValue("menu.territory.item.loadsax"));
+		subLoadTerritoryDOM = new JMenuItem(Resources.getValue("menu.territory.item.loaddom"));
+		subLoadTerritoryStAXCursor = new JMenuItem(Resources.getValue("menu.territory.item.loadstaxcur"));
+		subLoadTerritoryStAXIterator = new JMenuItem(Resources.getValue("menu.territory.item.loadstaxit"));
+		
+		subLoadTerritoryMenu.add(subLoadTerritorySAX);
+		subLoadTerritoryMenu.add(subLoadTerritoryDOM);
+		subLoadTerritoryMenu.add(subLoadTerritoryStAXCursor);
+		subLoadTerritoryMenu.add(subLoadTerritoryStAXIterator);
+
 		territoryMenu.add(saveTerritoryItem);
-		territoryMenu.add(loadTerritoryItem);
+		territoryMenu.add(subLoadTerritoryMenu);
 		territoryMenu.add(serializeTerritoryItem);
 		territoryMenu.add(deserializeTerritoryItem);
-		
+				
 		// set mnemonics and accelerators for territory menu items
 		saveTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.save.mnemonic"));
+		saveTerritoryItem.addActionListener(manager.getSerializationController());
 		saveTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
-		loadTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.load.mnemonic"));
-		loadTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK));
 		serializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.serialize.mnemonic"));
 		serializeTerritoryItem.addActionListener(manager.getSerializationController());
 		serializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
 		deserializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.deserialize.mnemonic"));
 		deserializeTerritoryItem.addActionListener(manager.getSerializationController());
 		deserializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
-		
 		
 		// create and add menu items for simulation menu
 		JMenuItem startSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.start"));

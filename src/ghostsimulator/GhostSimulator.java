@@ -1,6 +1,7 @@
 package ghostsimulator;
 
 import ghostsimulator.controller.SerializationController;
+import ghostsimulator.controller.XMLSerializationController;
 import ghostsimulator.model.Territory;
 import ghostsimulator.view.GhostSimulatorFrame;
 
@@ -19,6 +20,9 @@ public class GhostSimulator {
 
 		SerializationController serializationController = new SerializationController(manager);
 		manager.setSerializationController(serializationController);
+		
+		XMLSerializationController xmlSerializationController = new XMLSerializationController(manager);
+		manager.setXmlSerializationController(xmlSerializationController);
 		
 		GhostSimulatorFrame frame = new GhostSimulatorFrame(manager);
 		frame.setVisible(true);

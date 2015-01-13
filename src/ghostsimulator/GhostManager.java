@@ -3,6 +3,7 @@ package ghostsimulator;
 import ghostsimulator.controller.EditorManager;
 import ghostsimulator.controller.SerializationController;
 import ghostsimulator.controller.TerritoryManager;
+import ghostsimulator.controller.XMLSerializationController;
 import ghostsimulator.model.Territory;
 import ghostsimulator.util.AudioLoader;
 import ghostsimulator.view.Editor;
@@ -32,6 +33,7 @@ public class GhostManager {
 	private EditorManager editorManager;
 	private TerritoryManager terrManager ;
 	private SerializationController serializationController;
+	private XMLSerializationController xmlSerializationController;
 	
 	public EditorManager getEditorManager() {
 		return editorManager;
@@ -101,6 +103,12 @@ public class GhostManager {
 	}
 	public void setSerializationController(SerializationController serializationController) {
 		this.serializationController = serializationController;
+	}
+	public XMLSerializationController getXmlSerializationController() {
+		return xmlSerializationController;
+	}
+	public void setXmlSerializationController(XMLSerializationController xmlSerializationController) {
+		this.xmlSerializationController = xmlSerializationController;
 	}
 	
 }
