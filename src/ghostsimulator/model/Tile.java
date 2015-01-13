@@ -68,6 +68,14 @@ public class Tile implements Serializable {
 	}
 	
 	/**
+	 * Sets the number of fireballs
+	 * @param fireballs
+	 */
+	public void setFireballs(int fireballs) {
+		this.numFireballs = fireballs;
+	}
+	
+	/**
 	 * Returns true if there are fireballs on this tile
 	 * @return hasFireballs
 	 */

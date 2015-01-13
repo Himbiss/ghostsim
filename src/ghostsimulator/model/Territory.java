@@ -102,6 +102,17 @@ public class Territory extends Observable implements Serializable {
 	public Tile getTile(int col, int row) {
 		return territory[col][row];
 	}
+	
+	/**
+	 * Sets the tile at (col|row)
+	 * @param col
+	 * @param row
+	 * @param tile
+	 */
+	public void setTile(int col, int row, Tile tile) {
+		territory[col][row] = tile;
+	}
+	
 
 	/**
 	 * Animates the shot of a fireball from position 'position' towards 'direction'
@@ -178,6 +189,12 @@ public class Territory extends Observable implements Serializable {
 
 	public void setBooHooPosition(Point point) {
 		boohoo.setPosition(point);
+		setChanged();
+		notifyObservers();
+	}
+	
+	public void setBooHooDirection(Direction direction) {
+		boohoo.setDirection(direction);
 		setChanged();
 		notifyObservers();
 	}
