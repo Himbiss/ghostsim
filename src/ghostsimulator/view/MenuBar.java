@@ -1,5 +1,7 @@
 package ghostsimulator.view;
 import ghostsimulator.GhostManager;
+import ghostsimulator.controller.DBLoadListener;
+import ghostsimulator.controller.DBStoreListener;
 import ghostsimulator.util.ImageLoader;
 import ghostsimulator.util.Resources;
 
@@ -11,7 +13,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
 
 public class MenuBar extends JMenuBar {
@@ -31,14 +32,17 @@ public class MenuBar extends JMenuBar {
 		JMenu editorMenu = new JMenu(Resources.getValue("menu.editor.txt"));
 		JMenu territoryMenu = new JMenu(Resources.getValue("menu.territory.txt"));
 		JMenu simulationMenu = new JMenu(Resources.getValue("menu.simulation.txt"));
+		JMenu exampleMenu = new JMenu(Resources.getValue("menu.examples.txt"));
 		add(editorMenu);
 		add(territoryMenu);
 		add(simulationMenu);
+		add(exampleMenu);
 		
 		// set mnemonics for menus
 		editorMenu.setMnemonic(Resources.getMnemonic("menu.editor.txt"));
 		territoryMenu.setMnemonic(Resources.getMnemonic("menu.territory.txt"));
 		simulationMenu.setMnemonic(Resources.getMnemonic("menu.simulation.txt"));
+		exampleMenu.setMnemonic(Resources.getMnemonic("menu.examples.txt"));
 		
 		// create menu items for editor menu
 		JMenuItem saveItem = new JMenuItem(Resources.getValue("menu.editor.item.save"));
@@ -116,10 +120,23 @@ public class MenuBar extends JMenuBar {
 		stopSimulationItem.setMnemonic(Resources.getMnemonic("menu.simulation.item.stop.mnemonic"));
 		stopSimulationItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
 		
+		// create and add menu items for examples menu
+		JMenuItem loadExampleItem = new JMenuItem(Resources.getValue("menu.examples.item.load"));
+		loadExampleItem.setMnemonic(Resources.getMnemonic("menu.examples.item.load.mnemonic"));
+		loadExampleItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
+		loadExampleItem.addActionListener(new DBLoadListener());
+		JMenuItem saveExampleItem = new JMenuItem(Resources.getValue("menu.examples.item.save"));
+		saveExampleItem.setMnemonic(Resources.getMnemonic("menu.examples.item.save.mnemonic"));
+		saveExampleItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK + ActionEvent.SHIFT_MASK));
+		saveExampleItem.addActionListener(new DBStoreListener());
+		exampleMenu.add(loadExampleItem);
+		exampleMenu.add(saveExampleItem);
+		
 		Cursor c = ImageLoader.getCursor("cursor.png");
 		editorMenu.setCursor(c);
 		simulationMenu.setCursor(c);
 		territoryMenu.setCursor(c);
+		exampleMenu.setCursor(c);
 		setCursor(c);
 	}
 

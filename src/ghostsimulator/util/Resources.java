@@ -41,4 +41,8 @@ public class Resources {
 	public static char getMnemonic(String key) {
 		return Resources.bundle.getString(key).charAt(0);
 	}
+	
+	public static String getSystemProperty(String key) {
+		return Resources.prop.getProperty(key);
+	}
 }
