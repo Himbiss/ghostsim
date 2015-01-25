@@ -3,11 +3,12 @@ package ghostsimulator;
 import ghostsimulator.controller.SerializationController;
 import ghostsimulator.controller.XMLSerializationController;
 import ghostsimulator.model.Territory;
+import ghostsimulator.util.Resources;
 import ghostsimulator.view.GhostSimulatorFrame;
 
 public class GhostSimulator {
 
-	public static boolean DEBUG_MODE = true;
+	public static boolean DEBUG_MODE = false;
 	
 	private static Territory territory;
 
@@ -15,6 +16,7 @@ public class GhostSimulator {
 		// create the model
 		territory = new Territory();
 		
+		DEBUG_MODE = Boolean.parseBoolean(Resources.getSystemProperty("debug_mode"));
 		GhostManager manager = GhostManager.getInstance();
 		manager.setTerritory(territory);
 

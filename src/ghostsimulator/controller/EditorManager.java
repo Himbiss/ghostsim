@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringReader;
 
 import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
@@ -59,7 +58,7 @@ public class EditorManager {
 			throw new IOException("File cannot be opened");
 		}
 	}
-	
+
 	public void loadEditor(String program) {
 		Document doc = manager.getEditor().getDocument();
 		try {
@@ -69,7 +68,7 @@ public class EditorManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void clearEditor() {
 		Document doc = manager.getEditor().getDocument();
 		try {
@@ -84,17 +83,19 @@ public class EditorManager {
 	 */
 	public void saveEditor() {
 		if (file != null) {
-			if(!file.exists())
+			if (!file.exists())
 				try {
-					if(file.createNewFile()) {
-						System.err.println("Created new file: "+file.getAbsolutePath());
+					if (file.createNewFile()) {
+						System.err.println("Created new file: "
+								+ file.getAbsolutePath());
 					} else {
-						System.err.println("Error creating file: "+file.getAbsolutePath());
+						System.err.println("Error creating file: "
+								+ file.getAbsolutePath());
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-			
+
 			try (BufferedWriter writer = new BufferedWriter(
 					new FileWriter(file))) {
 				writer.write(manager.getEditor().getText());
@@ -110,21 +111,43 @@ public class EditorManager {
 	 * Called to load the default file into the editor
 	 */
 	public void loadDefaultFile() {
+		File directory = new File(DIRECTORY);
+		if (!directory.exists()) {
+			System.out.println("Directory '" + DIRECTORY
+					+ "' does not exist, creating it..");
+			if (!directory.mkdir()) {
+				System.err.println("Could not create the '" + DIRECTORY
+						+ "' directory!");
+				return;
+			}
+		}
+
 		File file = new File(DIRECTORY + "/" + PROGRAM_NAME + ".java");
 		// if the file does not exist, fill it with default content
 		if (!file.exists()) {
-			if(file.canWrite()) {
-				try (BufferedWriter writer = new BufferedWriter(
-						new FileWriter(file))) {
-					writer.write("void main() {\n");
-					writer.newLine();
-					writer.newLine();
-					writer.write("}");
-				} catch (IOException e) {
-					e.printStackTrace();
+			System.out.println("File '" + DIRECTORY + "/" + PROGRAM_NAME
+					+ "' does not exist, creating it..");
+			try {
+				if (file.createNewFile()) {
+					try (BufferedWriter writer = new BufferedWriter(
+							new FileWriter(file))) {
+						writer.write("void main() {\n");
+						writer.newLine();
+						writer.newLine();
+						writer.write("}");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					System.out.println("Could not create the file " + DIRECTORY
+							+ "/" + PROGRAM_NAME + "'!");
+					return;
 				}
-			} else {
-				System.err.println("Cannot write to file!");
+			} catch (IOException e) {
+				System.out
+						.println("An Exception occurred during creation of the file "
+								+ DIRECTORY + "/" + PROGRAM_NAME + "'!");
+				e.printStackTrace();
 				return;
 			}
 		}
@@ -137,44 +160,44 @@ public class EditorManager {
 	}
 
 	/**
-	 * Compiles the current Code in the editor and shows an error message if something went wrong
+	 * Compiles the current Code in the editor and shows an error message if
+	 * something went wrong
 	 */
 	public void compile() {
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))){
-			
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+
 			// build the new file with pre- and postfix
 			StringBuilder contentBuilder = new StringBuilder(PROGRAM_PREFIX);
 			contentBuilder.append(manager.getEditor().getText());
-		    contentBuilder.append(PROGRAM_POSTFIX);
-		    
-		    // write to file
-		    writer.write(contentBuilder.toString());
+			contentBuilder.append(PROGRAM_POSTFIX);
+
+			// write to file
+			writer.write(contentBuilder.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		// create a new result pane for showing the compilation result
 		CompilationResultPanel resultPanel = new CompilationResultPanel();
-		
+
 		// compile everything
 		JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-		int result = compiler.run(null, resultPanel.getCompilationResultStream(), resultPanel.getCompilationResultStream(), file.getAbsolutePath());
-				
-		if(result == 1) {
-			JOptionPane.showConfirmDialog(null,
-					resultPanel,
+		int result = compiler.run(null,
+				resultPanel.getCompilationResultStream(),
+				resultPanel.getCompilationResultStream(),
+				file.getAbsolutePath());
+
+		if (result == 1) {
+			JOptionPane.showConfirmDialog(null, resultPanel,
 					Resources.getValue("info.compilation.error"),
-					JOptionPane.OK_CANCEL_OPTION,
-					JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		} else {
 			JOptionPane.showConfirmDialog(null,
 					Resources.getValue("info.compilation.success"),
 					Resources.getValue("info.compilation.success"),
-	                JOptionPane.OK_CANCEL_OPTION,
-	                JOptionPane.PLAIN_MESSAGE);
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		}
-		
-		
+
 		// write old stuff from the editor to file
 		saveEditor();
 		clearEditor();
@@ -183,9 +206,10 @@ public class EditorManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		if(result == 0) {
-			// load the boohoo with a class loader, instantiate it and add it to the territory
+
+		if (result == 0) {
+			// load the boohoo with a class loader, instantiate it and add it to
+			// the territory
 			manager.getTerritoryManager().exchangeBooHoo();
 		}
 	}

@@ -1,11 +1,8 @@
 package ghostsimulator.controller;
 
 import ghostsimulator.GhostManager;
-import ghostsimulator.model.BooHoo;
-import ghostsimulator.model.BooHoo.Direction;
 import ghostsimulator.model.Territory;
 
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
