@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringReader;
 
 import javax.swing.JOptionPane;
 import javax.swing.text.BadLocationException;
@@ -56,6 +57,16 @@ public class EditorManager {
 			}
 		} else {
 			throw new IOException("File cannot be opened");
+		}
+	}
+	
+	public void loadEditor(String program) {
+		Document doc = manager.getEditor().getDocument();
+		try {
+			doc.remove(0, doc.getLength());
+			doc.insertString(0, program + "\n", null);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -177,5 +188,16 @@ public class EditorManager {
 			// load the boohoo with a class loader, instantiate it and add it to the territory
 			manager.getTerritoryManager().exchangeBooHoo();
 		}
+	}
+
+	public String getProgram() {
+		Document doc = manager.getEditor().getDocument();
+		String text = null;
+		try {
+			text = doc.getText(0, doc.getLength());
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		return text;
 	}
 }

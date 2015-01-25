@@ -1,7 +1,6 @@
 package ghostsimulator.controller;
 
-import java.awt.Point;
-import java.lang.reflect.InvocationTargetException;
+import java.io.StringWriter;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.model.BooHoo;
@@ -39,4 +38,9 @@ public class TerritoryManager {
 		}
 	}
 
+	public String getTerritoryAsXML() {
+		StringWriter writer = new StringWriter();
+		GhostManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
+		return writer.toString();
+	}
 }

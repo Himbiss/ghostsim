@@ -15,7 +15,7 @@ public class GhostSimulator {
 		// create the model
 		territory = new Territory();
 		
-		GhostManager manager = new GhostManager();
+		GhostManager manager = GhostManager.getInstance();
 		manager.setTerritory(territory);
 
 		SerializationController serializationController = new SerializationController(manager);

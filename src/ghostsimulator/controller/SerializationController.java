@@ -58,10 +58,4 @@ public class SerializationController implements ActionListener {
 			}
 		}
 	}
-	
-	private void replaceTerritory(Territory newTerritory) {
-		BooHoo boo = manager.getTerritory().getBoohoo();
-		newTerritory.setBoohoo(boo);
-		newTerritory.setBooHooPosition(new Point(1,1));
-	}
 }

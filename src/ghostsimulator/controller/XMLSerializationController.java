@@ -10,6 +10,7 @@ import ghostsimulator.model.Tile.Wall;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,6 +19,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 
 import javax.swing.JFileChooser;
 import javax.xml.namespace.QName;
@@ -41,6 +45,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -50,17 +55,17 @@ public class XMLSerializationController implements ActionListener {
 	private final JFileChooser fc = new JFileChooser();
 
 	// constants for the xml
-	private static final String TERRITORY = "territory";
-	private static final String WIDTH = "width";
-	private static final String HEIGHT = "height";
-	private static final String TILE = "tile";
-	private static final String BOOHOO_STATE = "boohoo_state";
-	private static final String COLUMN = "col";
-	private static final String ROW = "row";
-	private static final String DIRECTION = "direction";
-	private static final String WALL = "wall";
-	private static final String WALL_TYPE = "wall_type";
-	private static final String FIREBALLS = "fireballs";
+	public static final String TERRITORY = "territory";
+	public static final String WIDTH = "width";
+	public static final String HEIGHT = "height";
+	public static final String TILE = "tile";
+	public static final String BOOHOO_STATE = "boohoo_state";
+	public static final String COLUMN = "col";
+	public static final String ROW = "row";
+	public static final String DIRECTION = "direction";
+	public static final String WALL = "wall";
+	public static final String WALL_TYPE = "wall_type";
+	public static final String FIREBALLS = "fireballs";
 
 	public XMLSerializationController(GhostManager manager) {
 		this.manager = manager;
@@ -107,13 +112,8 @@ public class XMLSerializationController implements ActionListener {
 		return null;
 	}
 
-	/**
-	 * Saves the territory to 'file' using StAX
-	 * 
-	 * @param file
-	 */
-	private void saveWithStAX(File file) {
-		if (file == null)
+	public void saveWithStAX(Writer writer1) {
+		if (writer1 == null)
 			return;
 
 		// create a new output factory
@@ -121,7 +121,7 @@ public class XMLSerializationController implements ActionListener {
 
 		try {
 			XMLStreamWriter writer = factory
-					.createXMLStreamWriter(new FileWriter(file));
+					.createXMLStreamWriter(writer1);
 
 			Territory territory = manager.getTerritory();
 
@@ -181,93 +181,64 @@ public class XMLSerializationController implements ActionListener {
 
 		} catch (XMLStreamException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Saves the territory to 'file' using StAX
+	 * 
+	 * @param file
+	 */
+	public void saveWithStAX(File file) {
+		try {
+			saveWithStAX(new FileWriter(file));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	/**
-	 * Loads the territory from 'file' using SAX
-	 * 
-	 * @param file
-	 */
-	private void loadWithSAX(File file) {
+	private Territory parseXMLWithSAX(InputStream stream) {
+		SAXDefaultHandler handler = new SAXDefaultHandler();
 		try {
 
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			factory.setValidating(true);
 			
 			SAXParser saxParser = factory.newSAXParser();
-			
-			DefaultHandler handler = new DefaultHandler() {
-
-				private Tile tile;
-				private Territory territory;
-				private int boohoo_col, boohoo_row, boohoo_fireballs;
-				private Direction boohoo_dir;
-				
-				public void startElement(String uri, String localName,
-						String qName, Attributes attributes)
-						throws SAXException {
-
-					if (qName.equalsIgnoreCase(TERRITORY)) {
-						int columns = Integer.valueOf(attributes.getValue(WIDTH));
-						int rows = Integer.valueOf(attributes.getValue(HEIGHT));
-						territory = new Territory(columns, rows);
-					}
-
-					if (qName.equalsIgnoreCase(TILE)) {
-						int col = Integer.valueOf(attributes.getValue(COLUMN));
-						int row = Integer.valueOf(attributes.getValue(ROW));
-						int fireballs = Integer.valueOf(attributes.getValue(FIREBALLS));
-						tile = new Tile(col, row);
-						tile.setFireballs(fireballs);
-					}
-
-					if (qName.equalsIgnoreCase(WALL)) {
-						tile.setWall(Wall.valueOf(attributes.getValue(WALL_TYPE)));
-					}
-					
-					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
-						boohoo_col = Integer.valueOf(attributes.getValue(COLUMN));
-						boohoo_fireballs = Integer.valueOf(attributes.getValue(FIREBALLS));
-						boohoo_row = Integer.valueOf(attributes.getValue(ROW));
-						boohoo_dir = Direction.valueOf(attributes.getValue(DIRECTION));
-					}
-				}
-
-				public void endElement(String uri, String localName,
-						String qName) throws SAXException {
-
-					if (qName.equalsIgnoreCase(TILE)) {
-						territory.setTile(tile.getColumnIndex(), tile.getRowIndex(), tile);
-					}
-					
-					if (qName.equalsIgnoreCase(TERRITORY)) {
-						changeTerritory(territory);
-					}
-					
-					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
-						BooHoo boo = manager.getTerritory().getBoohoo();
-						territory.setBoohoo(boo);
-						territory.setBoohooNumFireballs(boohoo_fireballs);
-						territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
-						territory.setBooHooDirection(boohoo_dir);
-					}
-
-				}
-
-				public void characters(char ch[], int start, int length)
-						throws SAXException {
-					// nothing to do
-				}
-
-			};
-
-			saxParser.parse(file, handler);
+			saxParser.parse(stream, handler);
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return handler.getTerritory();
+	}
+	
+	/**
+	 * Loads the territory from 'file' using SAX
+	 * 
+	 * @param file
+	 */
+	private void loadWithSAX(File file) {
+		Territory newTerritory;
+		try(FileInputStream stream = new FileInputStream(file)) {
+			newTerritory = parseXMLWithSAX(stream);
+			changeTerritory(newTerritory);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	public void loadWithSAX(String xml) {
+		Territory newTerritory;
+		try(InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));) {
+			newTerritory = parseXMLWithSAX(stream);
+			changeTerritory(newTerritory);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
 	

@@ -34,6 +34,16 @@ public class GhostManager {
 	private TerritoryManager terrManager ;
 	private SerializationController serializationController;
 	private XMLSerializationController xmlSerializationController;
+	private static GhostManager instance;
+	
+	private GhostManager() {
+	}
+	
+	public static GhostManager getInstance() {
+		if(instance == null)
+			return (instance = new GhostManager());
+		return instance;
+	}
 	
 	public EditorManager getEditorManager() {
 		return editorManager;
