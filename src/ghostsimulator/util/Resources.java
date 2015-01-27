@@ -1,14 +1,11 @@
 package ghostsimulator.util;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
 import javax.swing.JComponent;
-
-import org.xml.sax.InputSource;
 
 public class Resources {
 

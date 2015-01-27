@@ -3,8 +3,6 @@ package ghostsimulator.view;
 import ghostsimulator.GhostManager;
 import ghostsimulator.GhostSimulator;
 import ghostsimulator.controller.TerritoryInputListener;
-import ghostsimulator.model.BooHoo;
-import ghostsimulator.model.NoSpaceOnTileException;
 import ghostsimulator.model.Territory;
 import ghostsimulator.model.Tile;
 import ghostsimulator.util.ImageLoader;
@@ -18,19 +16,15 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.beans.Transient;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class TerritoryPanel extends JPanel implements Observer {
+
+	private static final long serialVersionUID = 3831861652348965839L;
 
 	public static int TILE_SIZE = 51;
 
@@ -48,7 +42,6 @@ public class TerritoryPanel extends JPanel implements Observer {
 	private Image redWallImage;
 	private Image whiteWallImage;
 	private Image sandTileImage;
-	private Image fireballAnimatedImage;
 
 	public TerritoryPanel(GhostManager manager) {
 		this.manager = manager;
@@ -77,8 +70,6 @@ public class TerritoryPanel extends JPanel implements Observer {
 		boohooSouthImage = ImageLoader.getImage("boohoo_south_animated.gif");
 		boohooWestImage = ImageLoader.getImage("boohoo_west_animated.gif");
 		fireballImage = ImageLoader.getImage("fireball.png");
-		fireballAnimatedImage = ImageLoader
-				.getImage("mario_fireball_animated.gif");
 		redWallImage = ImageLoader.getImage("red_wall.png");
 		whiteWallImage = ImageLoader.getImage("white_wall.png");
 	}

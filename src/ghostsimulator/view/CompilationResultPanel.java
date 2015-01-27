@@ -3,7 +3,6 @@ package ghostsimulator.view;
 import ghostsimulator.util.CompilationResultOutputStream;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.io.OutputStream;
 
 import javax.swing.JPanel;
@@ -12,6 +11,7 @@ import javax.swing.JTextArea;
 
 public class CompilationResultPanel extends JPanel {
 
+	private static final long serialVersionUID = 6250061227322516651L;
 	private JTextArea area;
 	private CompilationResultOutputStream stream;
 

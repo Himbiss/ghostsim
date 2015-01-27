@@ -1,7 +1,5 @@
 package ghostsimulator.controller.tutor;
 
-import ghostsimulator.model.Territory;
-
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -23,7 +21,7 @@ public class TutorImpl extends UnicastRemoteObject implements TutorClientI, Tuto
 	}
 	
 	@Override
-	public int sendRequest(Territory territory, String code) throws RemoteException {
+	public int sendRequest(String territory, String code) throws RemoteException {
 		Request request = new Request((++lastId), territory, code);
 		if(requestQueue.add(request))
 			return lastId;
@@ -43,7 +41,7 @@ public class TutorImpl extends UnicastRemoteObject implements TutorClientI, Tuto
 	}
 
 	@Override
-	public void answerRequest(int id, Territory territory, String code) {
+	public void answerRequest(int id, String territory, String code) {
 		Answer answer = new Answer(id,territory,code);
 		answerMap.put(id, answer);
 	}

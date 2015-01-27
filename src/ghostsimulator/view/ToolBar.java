@@ -19,10 +19,10 @@ import javax.swing.SwingConstants;
 
 public class ToolBar extends JToolBar {
 
+	private static final long serialVersionUID = 2007794204117507675L;
 	private static Dimension DIM_SLIDER_HORIZONTAL = new Dimension(250, 50);
 	private static Dimension DIM_SLIDER_VERTICAL = new Dimension(50, 250);
 	private JSlider speedSlider;
-	private GhostManager manager;
 	private ButtonGroup territoryGroup;
 	private JToggleButton btnTerritoryFireball;
 	private JToggleButton btnTerritoryWhiteWall;
@@ -43,7 +43,6 @@ public class ToolBar extends JToolBar {
 
 	public ToolBar(final GhostManager manager) {
 		super("Toolbar", SwingConstants.HORIZONTAL);
-		this.manager = manager;
 
 		JButton btnSave = new JButton(ImageLoader.getImageIcon("gnome-dev-floppy.png"));
 		btnSave.setToolTipText(Resources.getValue("btn.save.txt"));

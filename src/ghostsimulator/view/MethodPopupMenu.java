@@ -11,6 +11,8 @@ import javax.swing.JPopupMenu;
 
 public class MethodPopupMenu extends JPopupMenu {
 	
+	private static final long serialVersionUID = 5361022532464653230L;
+
 	public MethodPopupMenu(GhostManager manager) {
 		BooHoo boohoo = manager.getTerritory().getBoohoo();
 		for(Method m :boohoo.getClass().getDeclaredMethods()) {

@@ -16,7 +16,7 @@ public class BooHooClassLoader extends ClassLoader{
         super(parent);
     }
 
-    public Class loadBooHooClass() throws ClassNotFoundException {
+    public Class<?> loadBooHooClass() throws ClassNotFoundException {
 
         try {
         	File file = new File(EditorManager.DIRECTORY+"/"+EditorManager.PROGRAM_NAME+".class");

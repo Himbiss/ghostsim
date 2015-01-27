@@ -2,7 +2,6 @@ package ghostsimulator.view;
 
 import ghostsimulator.GhostManager;
 import ghostsimulator.controller.EditorManager;
-import ghostsimulator.controller.SerializationController;
 import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
 import ghostsimulator.util.Resources;
@@ -26,6 +25,7 @@ import javax.swing.JSplitPane;
  */
 public class GhostSimulatorFrame extends JFrame {
 
+	private static final long serialVersionUID = -4137049524410217923L;
 	private JLabel infoLabel;
 
 	public GhostSimulatorFrame(GhostManager manager) {

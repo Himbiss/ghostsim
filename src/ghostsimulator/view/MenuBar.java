@@ -21,7 +21,7 @@ import javax.swing.KeyStroke;
 
 public class MenuBar extends JMenuBar {
 	
-	private GhostManager manager;
+	private static final long serialVersionUID = -1821774551044395067L;
 	public JMenuItem serializeTerritoryItem;
 	public JMenuItem deserializeTerritoryItem;
 	public JMenuItem saveTerritoryItem;
@@ -35,7 +35,6 @@ public class MenuBar extends JMenuBar {
 	public JMenuItem sendRequestItem;
 
 	public MenuBar(GhostManager manager) {
-		this.manager = manager;
 		// create and add menus
 		JMenu editorMenu = new JMenu(Resources.getValue("menu.editor.txt"));
 		JMenu territoryMenu = new JMenu(Resources.getValue("menu.territory.txt"));

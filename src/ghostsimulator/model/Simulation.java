@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.ResourceBundle;
 
 public class Simulation extends Thread implements Observer {
 

@@ -1,9 +1,9 @@
 package ghostsimulator.controller.tutor;
 
 import ghostsimulator.GhostManager;
-import ghostsimulator.model.Territory;
 import ghostsimulator.util.Resources;
 
+import java.io.StringWriter;
 import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -63,7 +63,7 @@ public class TutorManager {
 			Registry registry = LocateRegistry.getRegistry(server, port);
 			tutorClient = (TutorClientI) registry.lookup("Tutor");
 		} catch (ConnectException e) {
-			JOptionPane.showMessageDialog(null, "Konnte keine Verbindung mit dem TutorService ("+server+":"+port+") aufbauen!");
+			JOptionPane.showMessageDialog(null, Resources.getValue("err.noconnectiontutorservice")+" ("+server+":"+port+")");
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		} catch (NotBoundException e) {
@@ -79,12 +79,12 @@ public class TutorManager {
 		try {
 			if(tutorClient.hasAnswer(currentId)) {
 				Answer answer = tutorClient.getAnswer(currentId);
-				GhostManager.getInstance().setTerritory(answer.getTerritory());
+				GhostManager.getInstance().getXmlSerializationController().loadWithSAX(answer.getTerritory());
 				GhostManager.getInstance().getEditorManager().loadEditor(answer.getCode());
 				GhostManager.getInstance().getMenubar().sendRequestItem.setEnabled(true);
 				GhostManager.getInstance().getMenubar().getAnswerItem.setEnabled(false);
 			} else {
-				JOptionPane.showMessageDialog(null, "No Answer aviable!");
+				JOptionPane.showMessageDialog(null, Resources.getValue("err.noansweraviable"));
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -93,9 +93,10 @@ public class TutorManager {
 	
 	public void sendRequest() {
 		String program = GhostManager.getInstance().getEditorManager().getProgram();
-		Territory territory = GhostManager.getInstance().getTerritory();
+		StringWriter writer = new StringWriter();
+		GhostManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
 		try {
-			currentId = tutorClient.sendRequest(territory, program);
+			currentId = tutorClient.sendRequest(writer.toString(), program);
 			GhostManager.getInstance().getMenubar().sendRequestItem.setEnabled(false);
 			GhostManager.getInstance().getMenubar().getAnswerItem.setEnabled(true);
 		} catch (RemoteException e) {
@@ -106,20 +107,21 @@ public class TutorManager {
 	public void getRequest() {
 		if(tutorServer.hasRequest()) {
 			Request request = tutorServer.getLastRequest();
-			GhostManager.getInstance().setTerritory(request.getTerritory());
+			GhostManager.getInstance().getXmlSerializationController().loadWithSAX(request.getTerritory());
 			GhostManager.getInstance().getEditorManager().loadEditor(request.getCode());
 			currentId = request.getId();
 			GhostManager.getInstance().getMenubar().getRequestItem.setEnabled(false);
 			GhostManager.getInstance().getMenubar().sendAnswerItem.setEnabled(true);
 		} else {
-			JOptionPane.showMessageDialog(null, "Keine Anfragen verfügbar!");
+			JOptionPane.showMessageDialog(null, Resources.getValue("err.err.norequestaviable"));
 		}
 	}
 	
 	public void answerRequest() {
 		String program = GhostManager.getInstance().getEditorManager().getProgram();
-		Territory territory = GhostManager.getInstance().getTerritory();
-		tutorServer.answerRequest(currentId, territory, program);
+		StringWriter writer = new StringWriter();
+		GhostManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
+		tutorServer.answerRequest(currentId, writer.toString(), program);
 		GhostManager.getInstance().getMenubar().getRequestItem.setEnabled(true);
 		GhostManager.getInstance().getMenubar().sendAnswerItem.setEnabled(false);
 	}

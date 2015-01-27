@@ -11,6 +11,8 @@ import java.lang.reflect.Method;
 import javax.swing.JMenuItem;
 
 public class MethodMenuItem extends JMenuItem implements ActionListener {
+
+	private static final long serialVersionUID = -492195097487666226L;
 	Method m;
 	BooHoo boohoo;
 	GhostManager manager;

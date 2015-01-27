@@ -6,8 +6,6 @@ import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.NoSpaceOnTileException;
 import ghostsimulator.model.Tile;
 import ghostsimulator.model.Tile.Wall;
-import ghostsimulator.util.Invisible;
-import ghostsimulator.view.MethodMenuItem;
 import ghostsimulator.view.MethodPopupMenu;
 
 import java.awt.Point;
@@ -16,10 +14,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
 /**
@@ -29,7 +24,7 @@ import javax.swing.SwingUtilities;
 public class TerritoryInputListener implements MouseListener, MouseMotionListener, KeyListener {
 	
 	private GhostManager manager;
-	private int startX, startY, curX, curY;
+	private int startX, startY;
 	private boolean isDragging;
 	
 	public TerritoryInputListener(GhostManager manager) {
