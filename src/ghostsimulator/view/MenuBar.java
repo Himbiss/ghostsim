@@ -2,6 +2,10 @@ package ghostsimulator.view;
 import ghostsimulator.GhostManager;
 import ghostsimulator.controller.DBLoadListener;
 import ghostsimulator.controller.DBStoreListener;
+import ghostsimulator.controller.tutor.AnswerRequestListener;
+import ghostsimulator.controller.tutor.GetAnswerListener;
+import ghostsimulator.controller.tutor.GetRequestListener;
+import ghostsimulator.controller.tutor.SendRequestListener;
 import ghostsimulator.util.ImageLoader;
 import ghostsimulator.util.Resources;
 
@@ -25,6 +29,10 @@ public class MenuBar extends JMenuBar {
 	public JMenuItem subLoadTerritoryDOM;
 	public JMenuItem subLoadTerritoryStAXCursor;
 	public JMenuItem subLoadTerritoryStAXIterator;
+	public JMenuItem sendAnswerItem;
+	public JMenuItem getRequestItem;
+	public JMenuItem getAnswerItem;
+	public JMenuItem sendRequestItem;
 
 	public MenuBar(GhostManager manager) {
 		this.manager = manager;
@@ -33,16 +41,40 @@ public class MenuBar extends JMenuBar {
 		JMenu territoryMenu = new JMenu(Resources.getValue("menu.territory.txt"));
 		JMenu simulationMenu = new JMenu(Resources.getValue("menu.simulation.txt"));
 		JMenu exampleMenu = new JMenu(Resources.getValue("menu.examples.txt"));
+		JMenu tutorMenu = new JMenu(Resources.getValue("menu.tutor.txt"));
 		add(editorMenu);
 		add(territoryMenu);
 		add(simulationMenu);
 		add(exampleMenu);
+		add(tutorMenu);
 		
 		// set mnemonics for menus
 		editorMenu.setMnemonic(Resources.getMnemonic("menu.editor.txt"));
 		territoryMenu.setMnemonic(Resources.getMnemonic("menu.territory.txt"));
 		simulationMenu.setMnemonic(Resources.getMnemonic("menu.simulation.txt"));
 		exampleMenu.setMnemonic(Resources.getMnemonic("menu.examples.txt"));
+		tutorMenu.setMnemonic(Resources.getMnemonic("menu.tutor.txt"));
+		
+		// create menu items for tutor menu depending on the role (tutor or student)
+		if(Resources.getSystemProperty("role").equalsIgnoreCase("tutor")) {
+			sendAnswerItem = new JMenuItem(Resources.getValue("menu.tutor.item.sendanswer"));
+			sendAnswerItem.addActionListener(new AnswerRequestListener());
+			sendAnswerItem.setEnabled(false);
+			getRequestItem = new JMenuItem(Resources.getValue("menu.tutor.item.getrequest"));
+			getRequestItem.addActionListener(new GetRequestListener());
+			getRequestItem.setEnabled(true);
+			tutorMenu.add(sendAnswerItem);
+			tutorMenu.add(getRequestItem);
+		} else {
+			getAnswerItem = new JMenuItem(Resources.getValue("menu.tutor.item.getanswer"));
+			getAnswerItem.addActionListener(new GetAnswerListener());
+			getAnswerItem.setEnabled(false);
+			sendRequestItem = new JMenuItem(Resources.getValue("menu.tutor.item.sendrequest"));
+			sendRequestItem.addActionListener(new SendRequestListener());
+			sendRequestItem.setEnabled(true);
+			tutorMenu.add(getAnswerItem);
+			tutorMenu.add(sendRequestItem);
+		}
 		
 		// create menu items for editor menu
 		JMenuItem saveItem = new JMenuItem(Resources.getValue("menu.editor.item.save"));

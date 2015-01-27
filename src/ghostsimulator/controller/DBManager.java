@@ -195,6 +195,7 @@ public class DBManager {
 		PreparedStatement insertTagStmt = null;
 		ResultSet keySet = null;
 		try{
+			connection.setAutoCommit(false);
 			insertExampleStmt = connection.prepareStatement(insertExampleQuery, new String[] { "EXAMPLE_ID" });
 			insertExampleStmt.setString(1, program);
 			insertExampleStmt.setString(2, territoryXML);
@@ -215,14 +216,21 @@ public class DBManager {
 					}
 				}
 			}
+			connection.commit();
 		} catch (SQLException se) {
 			System.err.println("An error occurred while inserting the example into the database!");
 			se.printStackTrace();
+			try {
+				connection.rollback();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		} finally {
 			try{
 				insertExampleStmt.close();
 				insertTagStmt.close();
 				keySet.close();
+				connection.setAutoCommit(true);
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

@@ -1,14 +1,12 @@
 package ghostsimulator.controller;
 
 
-import ghostsimulator.util.ImageLoader;
 import ghostsimulator.view.Editor;
 
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
 
 import javax.swing.Action;
 import javax.swing.JMenuItem;
