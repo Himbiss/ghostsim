@@ -1,8 +1,8 @@
 package ghostsimulator.view;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.GhostSimulator;
-import ghostsimulator.controller.TerritoryInputListener;
+import ghostsimulator.controller.EntityManager;
+import ghostsimulator.controller.listener.TerritoryInputListener;
 import ghostsimulator.model.Territory;
 import ghostsimulator.model.Tile;
 import ghostsimulator.util.ImageLoader;
@@ -32,7 +32,7 @@ public class TerritoryPanel extends JPanel implements Observer {
 	private int rowCount;
 	private int offsetX, offsetY = TILE_SIZE;
 	private Font statusFont;
-	private GhostManager manager;
+	private EntityManager manager;
 
 	private Image boohooNorthImage;
 	private Image boohooEastImage;
@@ -43,8 +43,8 @@ public class TerritoryPanel extends JPanel implements Observer {
 	private Image whiteWallImage;
 	private Image sandTileImage;
 
-	public TerritoryPanel(GhostManager manager) {
-		this.manager = manager;
+	public TerritoryPanel() {
+		this.manager = EntityManager.getInstance();
 		// add listener
 		TerritoryInputListener territoryListener = new TerritoryInputListener(manager);
 		addMouseListener(territoryListener);

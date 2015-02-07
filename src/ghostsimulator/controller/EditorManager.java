@@ -1,6 +1,5 @@
 package ghostsimulator.controller;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.util.Resources;
 import ghostsimulator.view.CompilationResultPanel;
@@ -18,6 +17,11 @@ import javax.swing.text.Document;
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
+/**
+ * This class manages the editor pane.
+ * @author vincent
+ *
+ */
 public class EditorManager {
 
 	public final static String DIRECTORY = "programs";
@@ -26,11 +30,11 @@ public class EditorManager {
 			+ " extends " + BooHoo.class.getCanonicalName() + " {\n public ";
 	private final static String PROGRAM_POSTFIX = "\n}";
 
-	private GhostManager manager;
+	private EntityManager manager;
 	private File file;
 
-	public EditorManager(GhostManager manager) {
-		this.manager = manager;
+	public EditorManager() {
+		this.manager = EntityManager.getInstance();
 	}
 
 	/**

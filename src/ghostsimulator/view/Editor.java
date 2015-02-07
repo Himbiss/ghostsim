@@ -1,6 +1,5 @@
 package ghostsimulator.view;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.controller.AutocompleteAction;
 
 import java.awt.Dimension;
@@ -21,7 +20,7 @@ public class Editor extends JEditorPane {
 	
 	private static final long serialVersionUID = 2817101715134266739L;
 	
-	public Editor(GhostManager manager) {
+	public Editor() {
 		// add autocompletion to the editor
 		getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK), "autocomplete");
 		getActionMap().put("autocomplete", new AutocompleteAction(this));

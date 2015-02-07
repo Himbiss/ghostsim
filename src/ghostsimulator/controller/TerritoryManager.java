@@ -2,17 +2,16 @@ package ghostsimulator.controller;
 
 import java.io.StringWriter;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.Territory;
 import ghostsimulator.util.BooHooClassLoader;
 
 public class TerritoryManager {
 
-	private GhostManager manager;
+	private EntityManager manager;
 	
-	public TerritoryManager(GhostManager manager) {
-		this.manager = manager;
+	public TerritoryManager() {
+		this.manager = EntityManager.getInstance();
 	}
 	
 	public void exchangeBooHoo() {
@@ -22,7 +21,6 @@ public class TerritoryManager {
 			Territory territory = manager.getTerritory();
 			BooHoo boo = (BooHoo) clazz.newInstance();
 			territory.exchangeBooHoo(boo);
-			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (InstantiationException e) {
@@ -30,17 +28,29 @@ public class TerritoryManager {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * Returns the Territory as a XML String
+	 * @return xml
+	 */
 	public String getTerritoryAsXML() {
 		StringWriter writer = new StringWriter();
-		GhostManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
+		manager.getXmlSerializationController().saveWithStAX(writer);
 		return writer.toString();
+	}
+	
+	/**
+	 * Changes the current territory
+	 * @param territory
+	 */
+	public void changeTerritory(Territory territory) {
+		BooHoo oldBoo = manager.getTerritory().getBoohoo();
+		territory.exchangeBooHoo(oldBoo);
+		manager.setTerritory(territory);
 	}
 }

@@ -1,6 +1,7 @@
 package ghostsimulator.view;
 
-import ghostsimulator.GhostManager;
+import ghostsimulator.controller.AudioController;
+import ghostsimulator.controller.EntityManager;
 import ghostsimulator.model.BooHoo;
 
 import java.awt.event.ActionEvent;
@@ -15,9 +16,9 @@ public class MethodMenuItem extends JMenuItem implements ActionListener {
 	private static final long serialVersionUID = -492195097487666226L;
 	Method m;
 	BooHoo boohoo;
-	GhostManager manager;
+	EntityManager manager;
 	
-	public MethodMenuItem(Method m, BooHoo boohoo, GhostManager manager) {
+	public MethodMenuItem(Method m, BooHoo boohoo, EntityManager manager) {
 		super(m.getName());
 		addActionListener(this);
 		this.m = m;
@@ -32,15 +33,15 @@ public class MethodMenuItem extends JMenuItem implements ActionListener {
 		} catch (IllegalAccessException e1) {
 			System.err.println("Got IllegalAccessException: "+e1.getCause().getMessage());
 			manager.getInfoLabel().setText(e1.getCause().getMessage());
-			GhostManager.playErrorSound();
+			AudioController.playErrorSound();
 		} catch (IllegalArgumentException e1) {
 			System.err.println("Got IllegalArgumentException: "+e1.getCause().getMessage());
 			manager.getInfoLabel().setText(e1.getCause().getMessage());
-			GhostManager.playErrorSound();
+			AudioController.playErrorSound();
 		} catch (InvocationTargetException e1) {
 			System.err.println("Got RuntimeException: "+e1.getCause().getMessage());
 			manager.getInfoLabel().setText(e1.getCause().getMessage());
-			GhostManager.playErrorSound();
+			AudioController.playErrorSound();
 		}
 	}
 }

@@ -1,7 +1,7 @@
-package ghostsimulator.controller;
+package ghostsimulator.controller.listener;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.GhostSimulator;
+import ghostsimulator.controller.EntityManager;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.NoSpaceOnTileException;
 import ghostsimulator.model.Tile;
@@ -23,11 +23,11 @@ import javax.swing.SwingUtilities;
  */
 public class TerritoryInputListener implements MouseListener, MouseMotionListener, KeyListener {
 	
-	private GhostManager manager;
+	private EntityManager manager;
 	private int startX, startY;
 	private boolean isDragging;
 	
-	public TerritoryInputListener(GhostManager manager) {
+	public TerritoryInputListener(EntityManager manager) {
 		this.manager = manager;
 	}
 

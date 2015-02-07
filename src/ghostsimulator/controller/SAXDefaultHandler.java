@@ -1,6 +1,5 @@
 package ghostsimulator.controller;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.BooHoo.Direction;
 import ghostsimulator.model.Territory;
@@ -57,7 +56,7 @@ class SAXDefaultHandler extends DefaultHandler {
 		}
 		
 		if (qName.equalsIgnoreCase(XMLSerializationController.BOOHOO_STATE)) {
-			BooHoo boo = GhostManager.getInstance().getTerritory().getBoohoo();
+			BooHoo boo = EntityManager.getInstance().getTerritory().getBoohoo();
 			territory.setBoohoo(boo);
 			territory.setBoohooNumFireballs(boohoo_fireballs);
 			territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));

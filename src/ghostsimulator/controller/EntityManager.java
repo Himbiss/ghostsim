@@ -1,11 +1,6 @@
-package ghostsimulator;
+package ghostsimulator.controller;
 
-import ghostsimulator.controller.EditorManager;
-import ghostsimulator.controller.SerializationController;
-import ghostsimulator.controller.TerritoryManager;
-import ghostsimulator.controller.XMLSerializationController;
 import ghostsimulator.model.Territory;
-import ghostsimulator.util.AudioLoader;
 import ghostsimulator.view.Editor;
 import ghostsimulator.view.GhostSimulatorFrame;
 import ghostsimulator.view.MenuBar;
@@ -14,14 +9,11 @@ import ghostsimulator.view.ToolBar;
 
 import javax.swing.JLabel;
 
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
 /**
  * Manages all instances
  * @author Vincent Ortland
  */
-public class GhostManager {
+public class EntityManager {
 
 	private Territory territory;
 	private Editor editor;
@@ -32,16 +24,16 @@ public class GhostManager {
 	private JLabel infoLabel;
 	private EditorManager editorManager;
 	private TerritoryManager terrManager ;
-	private SerializationController serializationController;
 	private XMLSerializationController xmlSerializationController;
-	private static GhostManager instance;
+	private SimulationController simulationController;
+	private static EntityManager instance;
 	
-	private GhostManager() {
+	private EntityManager() {
 	}
 	
-	public static GhostManager getInstance() {
+	public static EntityManager getInstance() {
 		if(instance == null)
-			return (instance = new GhostManager());
+			return (instance = new EntityManager());
 		return instance;
 	}
 	
@@ -100,25 +92,20 @@ public class GhostManager {
 	public TerritoryManager getTerritoryManager() {
 		return this.terrManager;
 	}
-
-	public static void playErrorSound() {
-		try {
-			AudioStream audioStream = AudioLoader.getSound("error.wav");
-			AudioPlayer.player.start(audioStream);
-		} catch (Exception exc) {
-		}
-	}
-	public SerializationController getSerializationController() {
-		return serializationController;
-	}
-	public void setSerializationController(SerializationController serializationController) {
-		this.serializationController = serializationController;
-	}
+	
 	public XMLSerializationController getXmlSerializationController() {
 		return xmlSerializationController;
 	}
 	public void setXmlSerializationController(XMLSerializationController xmlSerializationController) {
 		this.xmlSerializationController = xmlSerializationController;
+	}
+
+	public SimulationController getSimulationController() {
+		return simulationController;
+	}
+
+	public void setSimulationController(SimulationController simulationController) {
+		this.simulationController = simulationController;
 	}
 	
 }

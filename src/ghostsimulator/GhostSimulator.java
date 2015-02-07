@@ -1,6 +1,7 @@
 package ghostsimulator;
 
-import ghostsimulator.controller.SerializationController;
+import ghostsimulator.controller.EntityManager;
+import ghostsimulator.controller.SimulationController;
 import ghostsimulator.controller.XMLSerializationController;
 import ghostsimulator.controller.tutor.TutorManager;
 import ghostsimulator.model.Territory;
@@ -18,14 +19,14 @@ public class GhostSimulator {
 		territory = new Territory();
 		
 		DEBUG_MODE = Boolean.parseBoolean(Resources.getSystemProperty("debug_mode"));
-		GhostManager manager = GhostManager.getInstance();
+		EntityManager manager = EntityManager.getInstance();
 		manager.setTerritory(territory);
-
-		SerializationController serializationController = new SerializationController(manager);
-		manager.setSerializationController(serializationController);
 		
-		XMLSerializationController xmlSerializationController = new XMLSerializationController(manager);
+		XMLSerializationController xmlSerializationController = new XMLSerializationController();
 		manager.setXmlSerializationController(xmlSerializationController);
+		
+		SimulationController simulationController = new SimulationController();
+		manager.setSimulationController(simulationController);
 		
 		GhostSimulatorFrame frame = new GhostSimulatorFrame(manager);
 		

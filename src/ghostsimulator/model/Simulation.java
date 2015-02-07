@@ -1,7 +1,6 @@
 package ghostsimulator.model;
 
-import ghostsimulator.GhostManager;
-import ghostsimulator.controller.SliderListener;
+import ghostsimulator.controller.EntityManager;
 import ghostsimulator.util.Resources;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,13 +11,14 @@ import java.util.Observer;
 public class Simulation extends Thread implements Observer {
 
 	private BooHoo boo;
-	private GhostManager manager;
+	private EntityManager manager;
 	
+	public static volatile int SPEED;
 	private volatile boolean needToPause = false;
 
-	public Simulation(GhostManager manager) {
+	public Simulation() {
+		this.manager = EntityManager.getInstance();
 		this.boo = manager.getTerritory().getBoohoo();
-		this.manager = manager;
 	}
 	
 	public synchronized boolean isPaused() {
@@ -27,9 +27,7 @@ public class Simulation extends Thread implements Observer {
 	
 	private synchronized void pausePoint() throws InterruptedException {
 		while (needToPause) {
-			manager.getToolbar().getBtnSimPause().setEnabled(false);
-			manager.getToolbar().getBtnSimStart().setEnabled(true);
-			manager.getToolbar().getBtnSimStop().setEnabled(true);
+			manager.getSimulationController().setPauseStartStopEnabled(false, true, true);
 			manager.getInfoLabel().setText(Resources.getValue("info.sim.pause"));
             wait();
         }
@@ -46,9 +44,7 @@ public class Simulation extends Thread implements Observer {
 
 	@Override
 	public void run() {
-		manager.getToolbar().getBtnSimPause().setEnabled(true);
-		manager.getToolbar().getBtnSimStart().setEnabled(false);
-		manager.getToolbar().getBtnSimStop().setEnabled(true);
+		manager.getSimulationController().setPauseStartStopEnabled(true, false, true);
 		boo.addObserver(this);
 		try {
 			Class<?>[] noparams = {};
@@ -66,15 +62,13 @@ public class Simulation extends Thread implements Observer {
 			manager.getInfoLabel().setText(Resources.getValue("info.sim.stop"));
 		}
 		boo.deleteObserver(this);
-		manager.getToolbar().getBtnSimPause().setEnabled(false);
-		manager.getToolbar().getBtnSimStart().setEnabled(true);
-		manager.getToolbar().getBtnSimStop().setEnabled(false);
+		manager.getSimulationController().setPauseStartStopEnabled(false, true, false);
 	}
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
 			try {
-				Thread.sleep(SliderListener.SPEED);
+				Thread.sleep(SPEED);
 				pausePoint();
 			} catch (InterruptedException e) {
 				throw new RuntimeException();

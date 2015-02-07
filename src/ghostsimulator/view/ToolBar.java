@@ -1,14 +1,15 @@
 package ghostsimulator.view;
 
-import ghostsimulator.GhostManager;
-import ghostsimulator.controller.SliderListener;
-import ghostsimulator.model.Simulation;
+import ghostsimulator.controller.listener.CompileListener;
+import ghostsimulator.controller.listener.PauseSimulationListener;
+import ghostsimulator.controller.listener.SaveEditorListener;
+import ghostsimulator.controller.listener.SliderListener;
+import ghostsimulator.controller.listener.StartSimulationListener;
+import ghostsimulator.controller.listener.StopSimulationListener;
 import ghostsimulator.util.ImageLoader;
 import ghostsimulator.util.Resources;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -31,7 +32,6 @@ public class ToolBar extends JToolBar {
 	private JButton btnSimStart;
 	private JButton btnSimPause;
 	private JButton btnSimStop;
-	private Simulation t;
 
 	public ButtonGroup getTerritoryGroup() {
 		return territoryGroup;
@@ -41,27 +41,15 @@ public class ToolBar extends JToolBar {
 		DELETE, ADD_FIREBALL, ADD_WHITEWALL, ADD_REDWALL
 	};
 
-	public ToolBar(final GhostManager manager) {
+	public ToolBar() {
 		super("Toolbar", SwingConstants.HORIZONTAL);
 
 		JButton btnSave = new JButton(ImageLoader.getImageIcon("gnome-dev-floppy.png"));
 		btnSave.setToolTipText(Resources.getValue("btn.save.txt"));
-		btnSave.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				manager.getEditorManager().saveEditor();
-			}
-		});
+		btnSave.addActionListener(new SaveEditorListener());
 		JButton btnCompile = new JButton(ImageLoader.getImageIcon("Compile24.gif"));
 		btnCompile.setToolTipText(Resources.getValue("btn.compile.txt"));
-		btnCompile.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				manager.getEditorManager().compile();
-			}
-		});
+		btnCompile.addActionListener(new CompileListener());
 
 		btnTerritoryFireball = new JToggleButton(ImageLoader.getImageIcon("fireball.png"));
 		btnTerritoryFireball.setToolTipText(Resources.getValue("btn.fireball.txt"));
@@ -81,44 +69,15 @@ public class ToolBar extends JToolBar {
 		btnSimStart = new JButton(ImageLoader.getImageIcon("Run24.gif"));
 		btnSimStart.setToolTipText(Resources.getValue("btn.simStart.txt"));
 		btnSimStart.setEnabled(true);
-		btnSimStart.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-					if(t != null && t.getState() == Thread.State.WAITING) {
-						t.unpause();
-						btnSimPause.setEnabled(true);
-						btnSimStart.setEnabled(false);
-						manager.getInfoLabel().setText(Resources.getValue("info.sim.restart"));
-					} else {
-						manager.getInfoLabel().setText(Resources.getValue("info.sim.start"));
-						t = new Simulation(manager);
-						t.start();
-					}
-			}
-		});
+		btnSimStart.addActionListener(new StartSimulationListener());
 		btnSimPause = new JButton(ImageLoader.getImageIcon("icon-pause-24.png"));
 		btnSimPause.setToolTipText(Resources.getValue("btn.simPause.txt"));
 		btnSimPause.setEnabled(false);
-		btnSimPause.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-					t.pause();
-					btnSimPause.setEnabled(false);
-					btnSimStart.setEnabled(true);
-			}
-		});
+		btnSimPause.addActionListener(new PauseSimulationListener());
 		btnSimStop = new JButton(ImageLoader.getImageIcon("Stop24.gif"));
 		btnSimStop.setToolTipText(Resources.getValue("btn.simStop.txt"));
 		btnSimStop.setEnabled(false);
-		btnSimStop.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				t.interrupt();
-			}
-		});
+		btnSimStop.addActionListener(new StopSimulationListener());
 
 		speedSlider = new JSlider(SwingConstants.HORIZONTAL);
 		speedSlider.setToolTipText(Resources.getValue("btn.speedSlider.txt"));
@@ -176,16 +135,9 @@ public class ToolBar extends JToolBar {
 			return TerritoryAction.DELETE;
 	}
 
-	public JButton getBtnSimStart() {
-		return btnSimStart;
+	public void setPauseStartStopEnabled(boolean pause, boolean start, boolean stop) {
+		btnSimPause.setEnabled(pause);
+		btnSimStart.setEnabled(start);
+		btnSimStop.setEnabled(stop);
 	}
-
-	public JButton getBtnSimPause() {
-		return btnSimPause;
-	}
-
-	public JButton getBtnSimStop() {
-		return btnSimStop;
-	}
-
 }

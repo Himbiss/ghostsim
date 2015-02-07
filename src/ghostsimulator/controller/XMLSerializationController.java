@@ -1,6 +1,5 @@
 package ghostsimulator.controller;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.model.BooHoo.Direction;
 import ghostsimulator.model.Territory;
@@ -8,8 +7,6 @@ import ghostsimulator.model.Tile;
 import ghostsimulator.model.Tile.Wall;
 
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,7 +19,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-import javax.swing.JFileChooser;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -45,10 +41,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-public class XMLSerializationController implements ActionListener {
-
-	private GhostManager manager;
-	private final JFileChooser fc = new JFileChooser();
+public class XMLSerializationController {
 
 	// constants for the xml
 	public static final String TERRITORY = "territory";
@@ -62,52 +55,7 @@ public class XMLSerializationController implements ActionListener {
 	public static final String WALL = "wall";
 	public static final String WALL_TYPE = "wall_type";
 	public static final String FIREBALLS = "fireballs";
-
-	public XMLSerializationController(GhostManager manager) {
-		this.manager = manager;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == manager.getMenubar().saveTerritoryItem) {
-			saveWithStAX(getFileSaveDialog());
-		} else if (e.getSource() == manager.getMenubar().subLoadTerritoryDOM) {
-			loadWithDOM(getFileOpenDialog());
-		} else if (e.getSource() == manager.getMenubar().subLoadTerritorySAX) {
-			loadWithSAX(getFileOpenDialog());
-		} else if (e.getSource() == manager.getMenubar().subLoadTerritoryStAXCursor) {
-			loadWithStAXCursor(getFileOpenDialog());
-		} else if (e.getSource() == manager.getMenubar().subLoadTerritoryStAXIterator) {
-			loadWithStAXIterator(getFileOpenDialog());
-		}
-	}
-
-	/**
-	 * Shows a Save Dialog and returns the selected file. Returns null if
-	 * canceled
-	 * 
-	 * @return file
-	 */
-	private File getFileSaveDialog() {
-		int returnVal = fc.showSaveDialog(manager.getFrame());
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-			return fc.getSelectedFile();
-		return null;
-	}
-
-	/**
-	 * Shows a Open Dialog and returns the selected file. Returns null if
-	 * canceled
-	 * 
-	 * @return file
-	 */
-	private File getFileOpenDialog() {
-		int returnVal = fc.showOpenDialog(manager.getFrame());
-		if (returnVal == JFileChooser.APPROVE_OPTION)
-			return fc.getSelectedFile();
-		return null;
-	}
-
+	
 	public void saveWithStAX(Writer writer1) {
 		if (writer1 == null)
 			return;
@@ -119,7 +67,7 @@ public class XMLSerializationController implements ActionListener {
 			XMLStreamWriter writer = factory
 					.createXMLStreamWriter(writer1);
 
-			Territory territory = manager.getTerritory();
+			Territory territory = EntityManager.getInstance().getTerritory();
 
 			// write start document and root node
 			writer.writeStartDocument();
@@ -186,10 +134,12 @@ public class XMLSerializationController implements ActionListener {
 	 * @param file
 	 */
 	public void saveWithStAX(File file) {
-		try {
-			saveWithStAX(new FileWriter(file));
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(file != null) {
+			try {
+				saveWithStAX(new FileWriter(file));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -214,11 +164,11 @@ public class XMLSerializationController implements ActionListener {
 	 * 
 	 * @param file
 	 */
-	private void loadWithSAX(File file) {
+	public void loadWithSAX(File file) {
 		Territory newTerritory;
 		try(FileInputStream stream = new FileInputStream(file)) {
 			newTerritory = parseXMLWithSAX(stream);
-			changeTerritory(newTerritory);
+			EntityManager.getInstance().getTerritoryManager().changeTerritory(newTerritory);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e1) {
@@ -230,20 +180,12 @@ public class XMLSerializationController implements ActionListener {
 		Territory newTerritory;
 		try(InputStream stream = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));) {
 			newTerritory = parseXMLWithSAX(stream);
-			changeTerritory(newTerritory);
+			EntityManager.getInstance().getTerritoryManager().changeTerritory(newTerritory);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Changes the current territory
-	 * @param territory
-	 */
-	private void changeTerritory(Territory territory) {
-		manager.setTerritory(territory);
 	}
 
 	/**
@@ -251,7 +193,7 @@ public class XMLSerializationController implements ActionListener {
 	 * 
 	 * @param file
 	 */
-	private void loadWithDOM(File file) {
+	public void loadWithDOM(File file) {
 		Territory territory = null;
 		int boohoo_col, boohoo_row, boohoo_fireballs;
 		Direction boohoo_dir;
@@ -309,14 +251,14 @@ public class XMLSerializationController implements ActionListener {
 				}
 				
 				// add the boohoo
-				BooHoo boo = manager.getTerritory().getBoohoo();
+				BooHoo boo = EntityManager.getInstance().getTerritory().getBoohoo();
 				territory.setBoohoo(boo);
 				territory.setBoohooNumFireballs(boohoo_fireballs);
 				territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
 				territory.setBooHooDirection(boohoo_dir);
 
 				// if everything went fine, set the new territory
-				changeTerritory(territory);
+				EntityManager.getInstance().getTerritoryManager().changeTerritory(territory);
 			} else {
 				throw new SAXException();
 			}
@@ -336,7 +278,7 @@ public class XMLSerializationController implements ActionListener {
 	 * 
 	 * @param file
 	 */
-	private void loadWithStAXCursor(File file) {
+	public void loadWithStAXCursor(File file) {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		factory.setProperty(XMLInputFactory.IS_VALIDATING, "true");
 		
@@ -392,11 +334,11 @@ public class XMLSerializationController implements ActionListener {
 					}
 					
 					if (qName.equalsIgnoreCase(TERRITORY)) {
-						changeTerritory(territory);
+						EntityManager.getInstance().getTerritoryManager().changeTerritory(territory);
 					}
 					
 					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
-						BooHoo boo = manager.getTerritory().getBoohoo();
+						BooHoo boo = EntityManager.getInstance().getTerritory().getBoohoo();
 						territory.setBoohoo(boo);
 						territory.setBoohooNumFireballs(boohoo_fireballs);
 						territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
@@ -414,14 +356,14 @@ public class XMLSerializationController implements ActionListener {
 			}
 		    
 			// add the boohoo
-			BooHoo boo = manager.getTerritory().getBoohoo();
+			BooHoo boo = EntityManager.getInstance().getTerritory().getBoohoo();
 			territory.setBoohoo(boo);
 			territory.setBoohooNumFireballs(boohoo_fireballs);
 			territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
 			territory.setBooHooDirection(boohoo_dir);
 
 			// if everything went fine, set the new territory
-			changeTerritory(territory);
+			EntityManager.getInstance().getTerritoryManager().changeTerritory(territory);
 		    
 		} catch (XMLStreamException e) {
 		    e.printStackTrace();
@@ -444,7 +386,7 @@ public class XMLSerializationController implements ActionListener {
 	 * 
 	 * @param file
 	 */
-	private void loadWithStAXIterator(File file) {
+	public void loadWithStAXIterator(File file) {
 		XMLInputFactory factory = XMLInputFactory.newInstance();
 		factory.setProperty(XMLInputFactory.IS_VALIDATING, "true");
 		
@@ -502,7 +444,7 @@ public class XMLSerializationController implements ActionListener {
 					}
 					
 					if (qName.equalsIgnoreCase(BOOHOO_STATE)) {
-						BooHoo boo = manager.getTerritory().getBoohoo();
+						BooHoo boo = EntityManager.getInstance().getTerritory().getBoohoo();
 						territory.setBoohoo(boo);
 						territory.setBoohooNumFireballs(boohoo_fireballs);
 						territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
@@ -512,13 +454,13 @@ public class XMLSerializationController implements ActionListener {
 			}
 		    
 			// add the boohoo
-			BooHoo boo = manager.getTerritory().getBoohoo();
+			BooHoo boo = EntityManager.getInstance().getTerritory().getBoohoo();
 			territory.setBoohoo(boo);
 			territory.setBooHooPosition(new Point(boohoo_col,boohoo_row));
 			territory.setBooHooDirection(boohoo_dir);
 
 			// if everything went fine, set the new territory
-			changeTerritory(territory);
+			EntityManager.getInstance().getTerritoryManager().changeTerritory(territory);
 		    
 		} catch (XMLStreamException e) {
 		    e.printStackTrace();

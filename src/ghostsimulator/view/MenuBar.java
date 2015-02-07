@@ -1,7 +1,16 @@
 package ghostsimulator.view;
-import ghostsimulator.GhostManager;
-import ghostsimulator.controller.DBLoadListener;
-import ghostsimulator.controller.DBStoreListener;
+import ghostsimulator.controller.listener.CompileListener;
+import ghostsimulator.controller.listener.DBLoadListener;
+import ghostsimulator.controller.listener.DBStoreListener;
+import ghostsimulator.controller.listener.DeserializeTerritoryListener;
+import ghostsimulator.controller.listener.ExitListener;
+import ghostsimulator.controller.listener.LoadTerritoryListener;
+import ghostsimulator.controller.listener.PauseSimulationListener;
+import ghostsimulator.controller.listener.SaveEditorListener;
+import ghostsimulator.controller.listener.SaveTerritoryListener;
+import ghostsimulator.controller.listener.SerializeTerritoryListener;
+import ghostsimulator.controller.listener.StartSimulationListener;
+import ghostsimulator.controller.listener.StopSimulationListener;
 import ghostsimulator.controller.tutor.AnswerRequestListener;
 import ghostsimulator.controller.tutor.GetAnswerListener;
 import ghostsimulator.controller.tutor.GetRequestListener;
@@ -11,7 +20,6 @@ import ghostsimulator.util.Resources;
 
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JMenu;
@@ -33,8 +41,11 @@ public class MenuBar extends JMenuBar {
 	public JMenuItem getRequestItem;
 	public JMenuItem getAnswerItem;
 	public JMenuItem sendRequestItem;
+	private JMenuItem pauseSimulationItem;
+	private JMenuItem startSimulationItem;
+	private JMenuItem stopSimulationItem;
 
-	public MenuBar(GhostManager manager) {
+	public MenuBar() {
 		// create and add menus
 		JMenu editorMenu = new JMenu(Resources.getValue("menu.editor.txt"));
 		JMenu territoryMenu = new JMenu(Resources.getValue("menu.territory.txt"));
@@ -77,14 +88,11 @@ public class MenuBar extends JMenuBar {
 		
 		// create menu items for editor menu
 		JMenuItem saveItem = new JMenuItem(Resources.getValue("menu.editor.item.save"));
+		saveItem.addActionListener(new SaveEditorListener());
 		JMenuItem compileItem = new JMenuItem(Resources.getValue("menu.editor.item.compile"));
+		compileItem.addActionListener(new CompileListener());
 		JMenuItem exitItem = new JMenuItem(Resources.getValue("menu.editor.item.exit"));
-		exitItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
+		exitItem.addActionListener(new ExitListener());
 		editorMenu.add(saveItem);
 		editorMenu.add(compileItem);
 		editorMenu.addSeparator();
@@ -109,10 +117,10 @@ public class MenuBar extends JMenuBar {
 		subLoadTerritoryDOM = new JMenuItem(Resources.getValue("menu.territory.item.loaddom"));
 		subLoadTerritoryStAXCursor = new JMenuItem(Resources.getValue("menu.territory.item.loadstaxcur"));
 		subLoadTerritoryStAXIterator = new JMenuItem(Resources.getValue("menu.territory.item.loadstaxit"));
-		subLoadTerritorySAX.addActionListener(manager.getXmlSerializationController());
-		subLoadTerritoryDOM.addActionListener(manager.getXmlSerializationController());
-		subLoadTerritoryStAXCursor.addActionListener(manager.getXmlSerializationController());
-		subLoadTerritoryStAXIterator.addActionListener(manager.getXmlSerializationController());
+		subLoadTerritorySAX.addActionListener(new LoadTerritoryListener());
+		subLoadTerritoryDOM.addActionListener(new LoadTerritoryListener());
+		subLoadTerritoryStAXCursor.addActionListener(new LoadTerritoryListener());
+		subLoadTerritoryStAXIterator.addActionListener(new LoadTerritoryListener());
 		
 		subLoadTerritoryMenu.add(subLoadTerritorySAX);
 		subLoadTerritoryMenu.add(subLoadTerritoryDOM);
@@ -126,19 +134,21 @@ public class MenuBar extends JMenuBar {
 				
 		// set mnemonics and accelerators for territory menu items
 		saveTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.save.mnemonic"));
-		saveTerritoryItem.addActionListener(manager.getXmlSerializationController());
+		saveTerritoryItem.addActionListener(new SaveTerritoryListener());
 		saveTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK));
 		serializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.serialize.mnemonic"));
-		serializeTerritoryItem.addActionListener(manager.getSerializationController());
+		serializeTerritoryItem.addActionListener(new SerializeTerritoryListener());
 		serializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
 		deserializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.deserialize.mnemonic"));
-		deserializeTerritoryItem.addActionListener(manager.getSerializationController());
+		deserializeTerritoryItem.addActionListener(new DeserializeTerritoryListener());
 		deserializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
 		
-		// create and add menu items for simulation menu
-		JMenuItem startSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.start"));
-		JMenuItem pauseSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.pause"));
-		JMenuItem stopSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.stop"));
+		startSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.start"));
+		startSimulationItem.addActionListener(new StartSimulationListener());
+		pauseSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.pause"));
+		pauseSimulationItem.addActionListener(new PauseSimulationListener());
+		stopSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.stop"));
+		stopSimulationItem.addActionListener(new StopSimulationListener());
 		simulationMenu.add(startSimulationItem);
 		simulationMenu.add(pauseSimulationItem);
 		simulationMenu.add(stopSimulationItem);
@@ -169,6 +179,12 @@ public class MenuBar extends JMenuBar {
 		territoryMenu.setCursor(c);
 		exampleMenu.setCursor(c);
 		setCursor(c);
+	}
+
+	public void setPauseStartStopEnables(boolean pause, boolean start, boolean stop) {
+		pauseSimulationItem.setEnabled(pause);
+		startSimulationItem.setEnabled(start);
+		stopSimulationItem.setEnabled(stop);
 	}
 
 }

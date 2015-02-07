@@ -1,7 +1,7 @@
 package ghostsimulator.view;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.controller.EditorManager;
+import ghostsimulator.controller.EntityManager;
 import ghostsimulator.controller.TerritoryManager;
 import ghostsimulator.model.Territory;
 import ghostsimulator.util.Resources;
@@ -28,7 +28,7 @@ public class GhostSimulatorFrame extends JFrame {
 	private static final long serialVersionUID = -4137049524410217923L;
 	private JLabel infoLabel;
 
-	public GhostSimulatorFrame(GhostManager manager) {
+	public GhostSimulatorFrame(EntityManager manager) {
 		// setup frame
 		setSize(1000, 800);
 		setLayout(new BorderLayout()); 
@@ -36,20 +36,20 @@ public class GhostSimulatorFrame extends JFrame {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setVisible(true);
 		
-		Editor editor = new Editor(manager);
-		EditorManager editorManager = new EditorManager(manager);
+		Editor editor = new Editor();
+		EditorManager editorManager = new EditorManager();
 		
 		// add menu bar
-		MenuBar menuBar = new MenuBar(manager);
+		MenuBar menuBar = new MenuBar();
 		setJMenuBar(menuBar);
 		
 		// add toolbar
-		ToolBar toolBar = new ToolBar(manager);
+		ToolBar toolBar = new ToolBar();
 		add(toolBar, BorderLayout.NORTH);
 		
 		// create the territory panel
-		TerritoryPanel territoryPanel = new TerritoryPanel(manager);
-		TerritoryManager terrManager = new TerritoryManager(manager);
+		TerritoryPanel territoryPanel = new TerritoryPanel();
+		TerritoryManager terrManager = new TerritoryManager();
 		
 		// create split pane and add editor and territory in scroll panes
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);

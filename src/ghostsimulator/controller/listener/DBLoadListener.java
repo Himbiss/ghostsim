@@ -1,5 +1,6 @@
-package ghostsimulator.controller;
+package ghostsimulator.controller.listener;
 
+import ghostsimulator.controller.DBManager;
 import ghostsimulator.util.Resources;
 
 import java.awt.event.ActionEvent;
@@ -7,6 +8,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+/**
+ * This listener opens a option pane to search in the database for tags when the user hits "load example".
+ * If an example is selected, the listener will load the simulator with the example.
+ * @author vincent
+ *
+ */
 public class DBLoadListener implements ActionListener {
 
 	@Override

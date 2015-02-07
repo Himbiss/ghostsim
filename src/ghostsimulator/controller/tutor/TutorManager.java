@@ -1,6 +1,6 @@
 package ghostsimulator.controller.tutor;
 
-import ghostsimulator.GhostManager;
+import ghostsimulator.controller.EntityManager;
 import ghostsimulator.util.Resources;
 
 import java.io.StringWriter;
@@ -79,10 +79,10 @@ public class TutorManager {
 		try {
 			if(tutorClient.hasAnswer(currentId)) {
 				Answer answer = tutorClient.getAnswer(currentId);
-				GhostManager.getInstance().getXmlSerializationController().loadWithSAX(answer.getTerritory());
-				GhostManager.getInstance().getEditorManager().loadEditor(answer.getCode());
-				GhostManager.getInstance().getMenubar().sendRequestItem.setEnabled(true);
-				GhostManager.getInstance().getMenubar().getAnswerItem.setEnabled(false);
+				EntityManager.getInstance().getXmlSerializationController().loadWithSAX(answer.getTerritory());
+				EntityManager.getInstance().getEditorManager().loadEditor(answer.getCode());
+				EntityManager.getInstance().getMenubar().sendRequestItem.setEnabled(true);
+				EntityManager.getInstance().getMenubar().getAnswerItem.setEnabled(false);
 			} else {
 				JOptionPane.showMessageDialog(null, Resources.getValue("err.noansweraviable"));
 			}
@@ -92,13 +92,13 @@ public class TutorManager {
 	}
 	
 	public void sendRequest() {
-		String program = GhostManager.getInstance().getEditorManager().getProgram();
+		String program = EntityManager.getInstance().getEditorManager().getProgram();
 		StringWriter writer = new StringWriter();
-		GhostManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
+		EntityManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
 		try {
 			currentId = tutorClient.sendRequest(writer.toString(), program);
-			GhostManager.getInstance().getMenubar().sendRequestItem.setEnabled(false);
-			GhostManager.getInstance().getMenubar().getAnswerItem.setEnabled(true);
+			EntityManager.getInstance().getMenubar().sendRequestItem.setEnabled(false);
+			EntityManager.getInstance().getMenubar().getAnswerItem.setEnabled(true);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
@@ -107,22 +107,22 @@ public class TutorManager {
 	public void getRequest() {
 		if(tutorServer.hasRequest()) {
 			Request request = tutorServer.getLastRequest();
-			GhostManager.getInstance().getXmlSerializationController().loadWithSAX(request.getTerritory());
-			GhostManager.getInstance().getEditorManager().loadEditor(request.getCode());
+			EntityManager.getInstance().getXmlSerializationController().loadWithSAX(request.getTerritory());
+			EntityManager.getInstance().getEditorManager().loadEditor(request.getCode());
 			currentId = request.getId();
-			GhostManager.getInstance().getMenubar().getRequestItem.setEnabled(false);
-			GhostManager.getInstance().getMenubar().sendAnswerItem.setEnabled(true);
+			EntityManager.getInstance().getMenubar().getRequestItem.setEnabled(false);
+			EntityManager.getInstance().getMenubar().sendAnswerItem.setEnabled(true);
 		} else {
-			JOptionPane.showMessageDialog(null, Resources.getValue("err.err.norequestaviable"));
+			JOptionPane.showMessageDialog(null, Resources.getValue("err.norequestaviable"));
 		}
 	}
 	
 	public void answerRequest() {
-		String program = GhostManager.getInstance().getEditorManager().getProgram();
+		String program = EntityManager.getInstance().getEditorManager().getProgram();
 		StringWriter writer = new StringWriter();
-		GhostManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
+		EntityManager.getInstance().getXmlSerializationController().saveWithStAX(writer);
 		tutorServer.answerRequest(currentId, writer.toString(), program);
-		GhostManager.getInstance().getMenubar().getRequestItem.setEnabled(true);
-		GhostManager.getInstance().getMenubar().sendAnswerItem.setEnabled(false);
+		EntityManager.getInstance().getMenubar().getRequestItem.setEnabled(true);
+		EntityManager.getInstance().getMenubar().sendAnswerItem.setEnabled(false);
 	}
 }

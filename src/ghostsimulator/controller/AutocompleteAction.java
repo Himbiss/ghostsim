@@ -13,9 +13,13 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.text.BadLocationException;
 
-
-
+/**
+ * This acion if fired if the user is in the editor and presses CTRL+SPACE.
+ * It shows a popup menu with methods that are declared by the boohoo object.
+ * @author vincent
+ */
 public class AutocompleteAction implements Action {
+	
 	private Editor editor;
 	private boolean isEnabled = true;
 	// an array of function strings for autocompletion
@@ -60,7 +64,8 @@ public class AutocompleteAction implements Action {
 	public void actionPerformed(ActionEvent ev) {
 		if(editor != null && popup != null) {
 			Point caretPosition = editor.getCaret().getMagicCaretPosition();
-			popup.show(editor, caretPosition.x, caretPosition.y);
+			if(caretPosition != null)
+				popup.show(editor, caretPosition.x, caretPosition.y);
 		}
 	}
 

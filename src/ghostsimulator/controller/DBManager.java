@@ -1,6 +1,5 @@
 package ghostsimulator.controller;
 
-import ghostsimulator.GhostManager;
 import ghostsimulator.util.Resources;
 
 import java.sql.Connection;
@@ -12,6 +11,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * This class manages the derby database and enables the user to load and save examples from and into the database.
+ * @author Vincent
+ *
+ */
 public class DBManager {
 
 	private static DBManager instance;
@@ -160,8 +164,8 @@ public class DBManager {
 			if(set.next()) {
 				String programStr = set.getString(1);
 				String territoryStr = set.getString(2);
-				GhostManager.getInstance().getEditorManager().loadEditor(programStr);
-				GhostManager.getInstance().getXmlSerializationController().loadWithSAX(territoryStr);
+				EntityManager.getInstance().getEditorManager().loadEditor(programStr);
+				EntityManager.getInstance().getXmlSerializationController().loadWithSAX(territoryStr);
 			} else {
 				System.err.println("No  found with the ");
 			}
@@ -185,8 +189,8 @@ public class DBManager {
 	public void storeCurrentExample(String[] tags) {
 		System.out.println("Storing example with tags: "+Arrays.toString(tags));
 		// first get the program and territory as xml code
-		String program = GhostManager.getInstance().getEditorManager().getProgram();
-		String territoryXML = GhostManager.getInstance().getTerritoryManager().getTerritoryAsXML();
+		String program = EntityManager.getInstance().getEditorManager().getProgram();
+		String territoryXML = EntityManager.getInstance().getTerritoryManager().getTerritoryAsXML();
 		
 		// then insert the example ( program + territory ) into the table
 		String insertExampleQuery = "INSERT INTO Examples( PROGRAM, TERRITORY ) VALUES ( ?, ?)";

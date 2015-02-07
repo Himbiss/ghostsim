@@ -1,6 +1,6 @@
 package ghostsimulator.view;
 
-import ghostsimulator.GhostManager;
+import ghostsimulator.controller.EntityManager;
 import ghostsimulator.model.BooHoo;
 import ghostsimulator.util.Invisible;
 
@@ -13,7 +13,7 @@ public class MethodPopupMenu extends JPopupMenu {
 	
 	private static final long serialVersionUID = 5361022532464653230L;
 
-	public MethodPopupMenu(GhostManager manager) {
+	public MethodPopupMenu(EntityManager manager) {
 		BooHoo boohoo = manager.getTerritory().getBoohoo();
 		for(Method m :boohoo.getClass().getDeclaredMethods()) {
 			int modifiers = m.getModifiers();
