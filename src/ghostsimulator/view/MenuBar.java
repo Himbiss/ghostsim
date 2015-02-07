@@ -6,6 +6,8 @@ import ghostsimulator.controller.listener.DeserializeTerritoryListener;
 import ghostsimulator.controller.listener.ExitListener;
 import ghostsimulator.controller.listener.LoadTerritoryListener;
 import ghostsimulator.controller.listener.PauseSimulationListener;
+import ghostsimulator.controller.listener.PrintEditorListener;
+import ghostsimulator.controller.listener.PrintTerritoryListener;
 import ghostsimulator.controller.listener.SaveEditorListener;
 import ghostsimulator.controller.listener.SaveTerritoryListener;
 import ghostsimulator.controller.listener.SerializeTerritoryListener;
@@ -33,6 +35,7 @@ public class MenuBar extends JMenuBar {
 	public JMenuItem serializeTerritoryItem;
 	public JMenuItem deserializeTerritoryItem;
 	public JMenuItem saveTerritoryItem;
+	public JMenuItem printTerritoryItem;
 	public JMenuItem subLoadTerritorySAX;
 	public JMenuItem subLoadTerritoryDOM;
 	public JMenuItem subLoadTerritoryStAXCursor;
@@ -93,8 +96,11 @@ public class MenuBar extends JMenuBar {
 		compileItem.addActionListener(new CompileListener());
 		JMenuItem exitItem = new JMenuItem(Resources.getValue("menu.editor.item.exit"));
 		exitItem.addActionListener(new ExitListener());
+		JMenuItem printEditorItem = new JMenuItem(Resources.getValue("menu.editor.item.printeditor"));
+		printEditorItem.addActionListener(new PrintEditorListener());
 		editorMenu.add(saveItem);
 		editorMenu.add(compileItem);
+		editorMenu.add(printEditorItem);
 		editorMenu.addSeparator();
 		editorMenu.add(exitItem);
 		
@@ -105,10 +111,13 @@ public class MenuBar extends JMenuBar {
 		compileItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ActionEvent.ALT_MASK));
 		exitItem.setMnemonic(Resources.getMnemonic("menu.editor.item.exit.mnemonic"));
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
+		printEditorItem.setMnemonic(Resources.getMnemonic("menu.editor.item.printeditor"));
+		printEditorItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
 		
 		saveTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.save"));
 		serializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.serialize"));
 		deserializeTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.deserialize"));
+		printTerritoryItem = new JMenuItem(Resources.getValue("menu.territory.item.printterritory"));
 		
 		// add submenu to territory menu item 'loadTerritoryItem
 		JMenu subLoadTerritoryMenu = new JMenu(Resources.getValue("menu.territory.item.load"));
@@ -131,6 +140,7 @@ public class MenuBar extends JMenuBar {
 		territoryMenu.add(subLoadTerritoryMenu);
 		territoryMenu.add(serializeTerritoryItem);
 		territoryMenu.add(deserializeTerritoryItem);
+		territoryMenu.add(printTerritoryItem);
 				
 		// set mnemonics and accelerators for territory menu items
 		saveTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.save.mnemonic"));
@@ -142,6 +152,9 @@ public class MenuBar extends JMenuBar {
 		deserializeTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.deserialize.mnemonic"));
 		deserializeTerritoryItem.addActionListener(new DeserializeTerritoryListener());
 		deserializeTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.ALT_MASK + ActionEvent.SHIFT_MASK));
+		printTerritoryItem.setMnemonic(Resources.getMnemonic("menu.territory.item.printterritory.mnemonic"));
+		printTerritoryItem.addActionListener(new PrintTerritoryListener());
+		printTerritoryItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.ALT_MASK));
 		
 		startSimulationItem = new JMenuItem(Resources.getValue("menu.simulation.item.start"));
 		startSimulationItem.addActionListener(new StartSimulationListener());

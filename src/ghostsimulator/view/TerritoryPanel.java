@@ -16,13 +16,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
 import java.beans.Transient;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.swing.JPanel;
 
-public class TerritoryPanel extends JPanel implements Observer {
+public class TerritoryPanel extends JPanel implements Observer, Printable {
 
 	private static final long serialVersionUID = 3831861652348965839L;
 
@@ -309,5 +312,15 @@ public class TerritoryPanel extends JPanel implements Observer {
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		repaint();
+	}
+
+	@Override
+	public int print(Graphics graphics, PageFormat pageFormat, int pageIndex)
+			throws PrinterException {
+		if(pageIndex > 0)
+			return Printable.NO_SUCH_PAGE;
+		// only print one page
+		paintComponent(graphics);
+		return Printable.PAGE_EXISTS;
 	}
 }
