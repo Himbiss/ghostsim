@@ -8,6 +8,8 @@ import ghostsimulator.model.Territory;
 import ghostsimulator.util.Resources;
 import ghostsimulator.view.GhostSimulatorFrame;
 
+import javax.swing.SwingUtilities;
+
 public class GhostSimulator {
 
 	public static boolean DEBUG_MODE = false;
@@ -15,6 +17,7 @@ public class GhostSimulator {
 	private static Territory territory;
 
 	public static void main(String[] args) {
+		
 		// create the model
 		territory = new Territory();
 		
@@ -28,12 +31,19 @@ public class GhostSimulator {
 		SimulationController simulationController = new SimulationController();
 		manager.setSimulationController(simulationController);
 		
-		GhostSimulatorFrame frame = new GhostSimulatorFrame(manager);
+		// start the gui
+		SwingUtilities.invokeLater(new Runnable() {
+		    public void run() {
+				GhostSimulatorFrame frame = new GhostSimulatorFrame(EntityManager.getInstance());
+				
+				// instantiate tutor manager
+				TutorManager.getInstance();
+				
+				// show main frame
+				frame.setVisible(true);
+		    }
+		  });
 		
-		// instantiate tutor manager
-		TutorManager.getInstance();
-		
-		frame.setVisible(true);
 	}
 
 }

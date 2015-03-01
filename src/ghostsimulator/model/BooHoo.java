@@ -197,8 +197,7 @@ public class BooHoo extends Observable implements Serializable {
 		notifyObservers();
 	}
 	
-
-	public void setDirection(Direction direction) {
+	void setDirection(Direction direction) {
 		this.direction = direction;
 	}
 
