@@ -1,5 +1,6 @@
 package ghostsimulator.util;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
@@ -16,7 +17,7 @@ public class Resources {
 	static {
 		Resources.prop = new Properties();
 		try {
-			InputStream stream = Resources.class.getClassLoader().getResourceAsStream("resources/prop/ghostsim.properties");
+			InputStream stream = new FileInputStream("ghostsim.properties");
 			Resources.prop.load(stream);
 			String language = Resources.prop.getProperty("language");
 			if (language == null) {
